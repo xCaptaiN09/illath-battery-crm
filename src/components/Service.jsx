@@ -172,8 +172,8 @@ export default function Service({ isAdmin }) {
         </div>
       </div>
 
-      <div className="border border-white/5 rounded-2xl overflow-hidden">
-        <table className="w-full text-left">
+      <div className="border border-white/5 rounded-2xl overflow-x-auto">
+        <table className="w-full min-w-[700px] text-left">
           <thead className="bg-white/5 text-white/50 text-xs uppercase tracking-wider">
             <tr>
               <th className="p-4 font-medium">Customer</th>
