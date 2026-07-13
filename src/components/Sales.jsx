@@ -452,7 +452,8 @@ export default function Sales({ isAdmin }) {
                       name="price"
                       value={form.price || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      readOnly={!isAdmin}
+                      className={`w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
                       placeholder="6500"
                     />
                   </div>
@@ -467,7 +468,8 @@ export default function Sales({ isAdmin }) {
                       name="warranty_months"
                       value={form.warranty_months || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      readOnly={!isAdmin}
+                      className={`w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
                       placeholder="12"
                     />
                   </div>
@@ -480,7 +482,8 @@ export default function Sales({ isAdmin }) {
                       name="sale_date"
                       value={form.sale_date || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      readOnly={!isAdmin}
+                      className={`w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
                     />
                   </div>
                 </div>

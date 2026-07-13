@@ -89,6 +89,8 @@ export default function Service({ isAdmin }) {
     Pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
     Charging: "bg-blue-500/10 text-blue-400 border-blue-500/20",
     Ready: "bg-green-500/10 text-green-400 border-green-500/20",
+    Completed: "bg-teal-500/10 text-teal-400 border-teal-500/20",
+    "Handed Over": "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
     Unrepairable: "bg-red-500/10 text-red-400 border-red-500/20",
   };
 
@@ -156,6 +158,8 @@ export default function Service({ isAdmin }) {
             <option value="Pending">Pending</option>
             <option value="Charging">Charging</option>
             <option value="Ready">Ready</option>
+            <option value="Completed">Completed</option>
+            <option value="Handed Over">Handed Over</option>
             <option value="Unrepairable">Unrepairable</option>
           </select>
         </div>
@@ -236,6 +240,8 @@ export default function Service({ isAdmin }) {
                       <option>Pending</option>
                       <option>Charging</option>
                       <option>Ready</option>
+                      <option>Completed</option>
+                      <option>Handed Over</option>
                       <option>Unrepairable</option>
                     </select>
                   </td>
@@ -277,7 +283,7 @@ export default function Service({ isAdmin }) {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl"
+              className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-center mb-6">
@@ -385,6 +391,8 @@ export default function Service({ isAdmin }) {
                       <option>Pending</option>
                       <option>Charging</option>
                       <option>Ready</option>
+                      <option>Completed</option>
+                      <option>Handed Over</option>
                       <option>Unrepairable</option>
                     </select>
                   </div>
