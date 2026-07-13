@@ -32,6 +32,7 @@ export default function Sales({ isAdmin }) {
     price: "",
     warranty_months: "12",
     sale_date: new Date().toISOString().split("T")[0],
+    image_urls: [],
   };
   const [form, setForm] = useState(emptyForm);
 
@@ -67,6 +68,39 @@ export default function Sales({ isAdmin }) {
   };
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    const uploadedUrls = [...(form.image_urls || [])];
+    for (const file of files) {
+      if (uploadedUrls.length >= 4) {
+        alert("Maximum 4 photos allowed.");
+        break;
+      }
+      const fileName = `sale_${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage
+        .from("battery-images")
+        .upload(fileName, file);
+      if (error) {
+        alert("Error uploading image: " + error.message);
+      } else {
+        const { data } = supabase.storage
+          .from("battery-images")
+          .getPublicUrl(fileName);
+        uploadedUrls.push(data.publicUrl);
+      }
+    }
+    setForm({ ...form, image_urls: uploadedUrls });
+  };
+
+  const handleRemoveImage = (urlToRemove) => {
+    setForm({
+      ...form,
+      image_urls: form.image_urls.filter((url) => url !== urlToRemove),
+    });
+  };
 
   const handleInventorySelect = (id) => {
     const item = inventory.find((i) => i.id === id);
@@ -487,6 +521,43 @@ export default function Sales({ isAdmin }) {
                     />
                   </div>
                 </div>
+
+                <div className="border-t border-white/10 pt-4 mt-4">
+                  <label className="block text-xs text-white/50 mb-2 uppercase tracking-wider">
+                    Upload Photos (Max 4)
+                  </label>
+                  <div className="flex flex-wrap gap-3 mb-3">
+                    {(form.image_urls || []).map((url, idx) => (
+                      <div key={idx} className="relative w-24 h-24 group">
+                        <img
+                          src={url}
+                          alt={`Upload ${idx}`}
+                          className="w-full h-full object-cover rounded-lg border border-white/10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(url)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                    {(form.image_urls?.length || 0) < 4 && (
+                      <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed border-white/10 rounded-lg cursor-pointer hover:border-white/30 transition-colors text-white/30 text-xs text-center px-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        + Add Photo
+                      </label>
+                    )}
+                  </div>
+                </div>
+
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   type="submit"
