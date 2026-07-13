@@ -11,6 +11,7 @@ import {
   Filter,
   ChevronDown,
   Battery,
+  MapPin,
 } from "lucide-react";
 
 export default function Sales({ isAdmin }) {
@@ -37,6 +38,11 @@ export default function Sales({ isAdmin }) {
     price: "",
     warranty_months: "12",
     sale_date: new Date().toISOString().split("T")[0],
+    sale_time: new Date().toTimeString().split(" ")[0],
+    customer_gstin: "",
+    customer_state: "",
+    customer_address: "",
+    map_coordinates: "",
     image_urls: [],
   };
   const [form, setForm] = useState(emptyForm);
@@ -115,6 +121,37 @@ export default function Sales({ isAdmin }) {
         battery_model: item.model,
         price: item.price || "",
       });
+  };
+
+  const handleLocate = () => {
+    if (!navigator.geolocation)
+      return alert("Geolocation is not supported by your browser.");
+    setForm((prev) => ({ ...prev, customer_address: "Fetching location..." }));
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+          );
+          const data = await response.json();
+          const addr = data.display_name || `${latitude}, ${longitude}`;
+          setForm((prev) => ({
+            ...prev,
+            customer_address: addr,
+            map_coordinates: `${latitude}, ${longitude}`,
+          }));
+        } catch (err) {
+          setForm((prev) => ({
+            ...prev,
+            customer_address: "Unable to fetch address",
+            map_coordinates: `${latitude}, ${longitude}`,
+          }));
+        }
+      },
+      () =>
+        alert("Unable to retrieve your location. Please check permissions."),
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -336,12 +373,13 @@ export default function Sales({ isAdmin }) {
                         </div>
                         <div>
                           <span className="text-white/40 uppercase text-xs block mb-1">
-                            Sale Date
+                            Date & Time
                           </span>
                           <span className="text-white/90">
                             {sale.sale_date
                               ? new Date(sale.sale_date).toLocaleDateString()
-                              : "-"}
+                              : "-"}{" "}
+                            {sale.sale_time || ""}
                           </span>
                         </div>
                         <div>
@@ -352,6 +390,34 @@ export default function Sales({ isAdmin }) {
                             {calculateExpiry(
                               sale.sale_date,
                               sale.warranty_months,
+                            )}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            GSTIN
+                          </span>
+                          <span className="text-white/90">
+                            {sale.customer_gstin || "-"}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Address
+                          </span>
+                          <span className="text-white/90">
+                            {sale.customer_address || "-"}{" "}
+                            {sale.map_coordinates ? (
+                              <a
+                                href={`https://maps.google.com/?q=${sale.map_coordinates}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-indigo-400 underline"
+                              >
+                                (View Map)
+                              </a>
+                            ) : (
+                              ""
                             )}
                           </span>
                         </div>
@@ -500,6 +566,56 @@ export default function Sales({ isAdmin }) {
                     />
                   </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                      GSTIN (Optional)
+                    </label>
+                    <input
+                      name="customer_gstin"
+                      value={form.customer_gstin || ""}
+                      onChange={handleChange}
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      placeholder="32AAWPE2153N1ZH"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                      State
+                    </label>
+                    <input
+                      name="customer_state"
+                      value={form.customer_state || ""}
+                      onChange={handleChange}
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      placeholder="Kerala"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    Address & Location
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      name="customer_address"
+                      value={form.customer_address || ""}
+                      onChange={handleChange}
+                      className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      placeholder="Enter manually or use map"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleLocate}
+                      className="bg-white/10 hover:bg-white/20 text-white px-3 rounded-xl text-xs font-medium flex items-center gap-1 whitespace-nowrap"
+                    >
+                      <MapPin className="w-4 h-4" /> Map
+                    </button>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
@@ -535,6 +651,7 @@ export default function Sales({ isAdmin }) {
                     </datalist>
                   </div>
                 </div>
+
                 <div className="border-t border-white/10 pt-4 mt-4">
                   <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
                     Select from Inventory (Optional)
@@ -555,6 +672,7 @@ export default function Sales({ isAdmin }) {
                     ))}
                   </select>
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
@@ -583,6 +701,7 @@ export default function Sales({ isAdmin }) {
                     />
                   </div>
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
@@ -611,10 +730,11 @@ export default function Sales({ isAdmin }) {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
-                      Warranty (Months)
+                      Warranty
                     </label>
                     <input
                       type="number"
@@ -637,6 +757,18 @@ export default function Sales({ isAdmin }) {
                       onChange={handleChange}
                       readOnly={!isAdmin}
                       className={`w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                      Time
+                    </label>
+                    <input
+                      type="time"
+                      name="sale_time"
+                      value={form.sale_time || ""}
+                      onChange={handleChange}
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
                     />
                   </div>
                 </div>
