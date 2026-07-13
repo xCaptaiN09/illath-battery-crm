@@ -28,6 +28,7 @@ export default function Inventory({ isAdmin }) {
     model: "",
     type: "Car",
     price: "",
+    hsn_code: "85071000",
   });
 
   useEffect(() => {
@@ -46,7 +47,13 @@ export default function Inventory({ isAdmin }) {
 
   const openNewForm = () => {
     setEditingItem(null);
-    setForm({ brand: "", model: "", type: "Car", price: "" });
+    setForm({
+      brand: "",
+      model: "",
+      type: "Car",
+      price: "",
+      hsn_code: "85071000",
+    });
     setShowForm(true);
   };
   const openEditForm = (item) => {
@@ -56,6 +63,7 @@ export default function Inventory({ isAdmin }) {
       model: item.model,
       type: item.type,
       price: item.price || "",
+      hsn_code: item.hsn_code || "85071000",
     });
     setShowForm(true);
     setExpandedId(null);
@@ -157,7 +165,6 @@ export default function Inventory({ isAdmin }) {
         </div>
       </div>
 
-      {/* Accordion List */}
       <div className="space-y-2">
         {loading ? (
           <div className="p-8 text-center text-white/40">Loading...</div>
@@ -185,7 +192,7 @@ export default function Inventory({ isAdmin }) {
                     <div className="text-white/90 font-medium">
                       {item.brand} {item.model}
                     </div>
-                    <div className="text-white/40 text-xs">
+                    <div className="text-white/40 text-xs font-mono">
                       {item.type} • ₹{item.price || "-"}
                     </div>
                   </div>
@@ -227,10 +234,18 @@ export default function Inventory({ isAdmin }) {
                         </div>
                         <div>
                           <span className="text-white/40 uppercase text-xs block mb-1">
-                            Price
+                            Base Price
                           </span>
-                          <span className="text-white/90">
+                          <span className="text-white/90 font-mono">
                             ₹{item.price || "-"}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            HSN Code
+                          </span>
+                          <span className="text-white/90 font-mono">
+                            {item.hsn_code || "-"}
                           </span>
                         </div>
                       </div>
@@ -377,17 +392,29 @@ export default function Inventory({ isAdmin }) {
                   </div>
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
-                      Price (₹)
+                      Base Price (₹)
                     </label>
                     <input
                       type="number"
                       name="price"
                       value={form.price}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all"
-                      placeholder="e.g. 6500"
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all font-mono"
+                      placeholder="6500"
                     />
                   </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    HSN Code
+                  </label>
+                  <input
+                    name="hsn_code"
+                    value={form.hsn_code}
+                    onChange={handleChange}
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all font-mono"
+                    placeholder="85071000"
+                  />
                 </div>
                 <motion.button
                   whileTap={{ scale: 0.98 }}

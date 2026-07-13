@@ -8,117 +8,173 @@ export const generateInvoice = (sale, settings) => {
     ? new Date(sale.sale_date).toLocaleDateString()
     : new Date().toLocaleDateString();
 
+  // Premium Dark Header
+  doc.setFillColor(15, 15, 15);
+  doc.rect(0, 0, 210, 35, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.text(settings.shop_name?.toUpperCase() || "BATTERY SHOP", 14, 18);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.text("TAX INVOICE", 196, 12, { align: "right" });
+  doc.setTextColor(150, 150, 150);
+  doc.text(`Invoice No: ${invoiceNo}`, 196, 20, { align: "right" });
+  doc.text(`Date: ${date}`, 196, 26, { align: "right" });
+
   // Shop Details (Seller)
-  doc.setFontSize(20);
-  doc.setFont(undefined, "bold");
-  doc.text(settings.shop_name || "Battery Shop", 14, 20);
-
-  doc.setFontSize(10);
-  doc.setFont(undefined, "normal");
-  doc.text(settings.shop_address || "", 14, 27);
-  doc.text(`Phone: ${settings.shop_phone || ""}`, 14, 33);
-  doc.text(`GSTIN: ${settings.shop_gstin || ""}`, 14, 39);
-  doc.text(`State: ${settings.shop_state || ""}`, 14, 45);
-
-  // Invoice Title
-  doc.setFontSize(16);
-  doc.setFont(undefined, "bold");
-  doc.text("TAX INVOICE", 150, 20);
-
-  doc.setFontSize(10);
-  doc.setFont(undefined, "normal");
-  doc.text(`Invoice No: ${invoiceNo}`, 150, 27);
-  doc.text(`Date: ${date}`, 150, 33);
+  doc.setTextColor(80, 80, 80);
+  doc.setFontSize(9);
+  doc.text(settings.shop_address || "", 14, 45);
+  doc.text(
+    `Phone: ${settings.shop_phone || ""} | GSTIN: ${settings.shop_gstin || ""}`,
+    14,
+    50,
+  );
+  doc.text(`State: ${settings.shop_state || ""}`, 14, 55);
 
   // Bill To (Buyer)
-  doc.setFont(undefined, "bold");
-  doc.text("Buyer (Bill to)", 14, 60);
-  doc.setFont(undefined, "normal");
-  doc.text(sale.customer_name || "", 14, 67);
-  doc.text(sale.customer_address || "", 14, 73);
-  doc.text(`Phone: ${sale.phone || ""}`, 14, 79);
-  doc.text(`GSTIN: ${sale.customer_gstin || ""}`, 14, 85);
-  doc.text(`State: ${sale.customer_state || ""}`, 14, 91);
+  doc.setDrawColor(230, 230, 230);
+  doc.line(14, 65, 196, 65);
 
-  // Table Calculations (Assuming 18% GST inclusive in the final price)
-  const totalAmount = sale.price || 0;
-  const taxableValue = totalAmount / 1.18;
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 0, 0);
+  doc.text("BILL TO", 14, 72);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(sale.customer_name || "", 14, 79);
+  doc.setFontSize(9);
+  doc.setTextColor(80, 80, 80);
+  doc.text(sale.customer_address || "", 14, 85, { maxWidth: 110 });
+  doc.text(`Phone: ${sale.phone || ""}", 14, 95`);
+  doc.text(
+    `GSTIN: ${sale.customer_gstin || "N/A"} | State: ${sale.customer_state || "N/A"}`,
+    14,
+    100,
+  );
+
+  // Calculations
+  const mrp = sale.mrp || sale.price || 0;
+  const discount = sale.discount || 0;
+  const finalPrice = mrp - discount;
+  const taxableValue = finalPrice / 1.18;
   const cgst = taxableValue * 0.09;
   const sgst = taxableValue * 0.09;
 
-  // Items Table
+  // Items Table (Monospace for numbers)
   autoTable(doc, {
-    startY: 100,
-    head: [
-      ["Sl No", "Description of Goods", "HSN/SAC", "Rate", "Qty", "Amount"],
-    ],
+    startY: 110,
+    head: [["#", "Description of Goods", "HSN", "Rate", "Qty", "Amount"]],
     body: [
       [
         "1",
         `${sale.battery_brand} ${sale.battery_model}\nS/N: ${sale.serial_number || "N/A"}`,
-        "85071000", // Standard HSN for Lead-Acid Batteries
+        sale.hsn_code || "85071000",
         taxableValue.toFixed(2),
         "1",
         taxableValue.toFixed(2),
       ],
     ],
     theme: "grid",
-    headStyles: { fillColor: [30, 30, 30], textColor: 255 },
-    styles: { fontSize: 10, cellPadding: 3 },
+    headStyles: {
+      fillColor: [245, 245, 245],
+      textColor: 50,
+      fontStyle: "bold",
+    },
+    bodyStyles: { textColor: 50 },
+    styles: {
+      fontSize: 9,
+      cellPadding: 3,
+      font: "courier",
+      lineColor: [230, 230, 230],
+    },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 10 },
+      2: { halign: "center" },
+      3: { halign: "right" },
+      4: { halign: "center" },
+      5: { halign: "right" },
+    },
   });
 
   let finalY = doc.lastAutoTable.finalY;
 
-  // Tax Summary Table
-  autoTable(doc, {
-    startY: finalY + 5,
-    head: [["HSN/SAC", "Taxable Value", "CGST (9%)", "SGST (9%)", "Total Tax"]],
-    body: [
-      [
-        "85071000",
-        taxableValue.toFixed(2),
-        cgst.toFixed(2),
-        sgst.toFixed(2),
-        (cgst + sgst).toFixed(2),
-      ],
-    ],
-    theme: "grid",
-    headStyles: { fillColor: [240, 240, 240], textColor: 0 },
-    styles: { fontSize: 10, cellPadding: 3 },
-  });
-
-  finalY = doc.lastAutoTable.finalY;
-
-  // Grand Total
-  doc.setFontSize(12);
-  doc.setFont(undefined, "bold");
-  doc.text(`Grand Total: Rs. ${totalAmount.toFixed(2)}`, 140, finalY + 15);
-
+  // Summary Box (Right aligned, Monospace)
+  doc.setFont("courier", "normal");
   doc.setFontSize(9);
-  doc.setFont(undefined, "normal");
-  doc.text("Amount Chargeable (in words):", 14, finalY + 15);
-  doc.text("INR " + numberToWords(totalAmount) + " Only", 14, finalY + 21);
+  let summaryY = finalY + 10;
+  const summaryX = 140;
+
+  doc.setTextColor(100, 100, 100);
+  doc.text("MRP:", summaryX, summaryY);
+  doc.text(`Rs. ${mrp.toFixed(2)}`, 196, summaryY, { align: "right" });
+
+  if (discount > 0) {
+    summaryY += 6;
+    doc.setTextColor(200, 50, 50);
+    doc.text("Discount:", summaryX, summaryY);
+    doc.text(`- Rs. ${discount.toFixed(2)}`, 196, summaryY, { align: "right" });
+  }
+
+  summaryY += 6;
+  doc.setTextColor(100, 100, 100);
+  doc.text("Taxable Value:", summaryX, summaryY);
+  doc.text(`Rs. ${taxableValue.toFixed(2)}`, 196, summaryY, { align: "right" });
+
+  summaryY += 6;
+  doc.text("CGST (9%):", summaryX, summaryY);
+  doc.text(`Rs. ${cgst.toFixed(2)}`, 196, summaryY, { align: "right" });
+
+  summaryY += 6;
+  doc.text("SGST (9%):", summaryX, summaryY);
+  doc.text(`Rs. ${sgst.toFixed(2)}`, 196, summaryY, { align: "right" });
+
+  summaryY += 8;
+  doc.setDrawColor(20, 20, 20);
+  doc.setLineWidth(0.5);
+  doc.line(summaryX, summaryY, 196, summaryY);
+
+  summaryY += 6;
+  doc.setFont("courier", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text("GRAND TOTAL:", summaryX, summaryY);
+  doc.text(`Rs. ${finalPrice.toFixed(2)}`, 196, summaryY, { align: "right" });
+
+  // Amount in words (Left aligned, Helvetica)
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(9);
+  doc.setTextColor(80, 80, 80);
+  doc.text("Amount Chargeable (in words):", 14, summaryY);
+  doc.text("INR " + numberToWords(finalPrice) + " Only", 14, summaryY + 6);
 
   // Footer
+  doc.setDrawColor(230, 230, 230);
+  doc.line(14, 270, 196, 270);
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
+  doc.setTextColor(120, 120, 120);
   doc.text(
     "Declaration: We declare that this invoice shows the actual price of the",
     14,
-    finalY + 35,
+    276,
   );
   doc.text(
     "goods described and that all particulars are true and correct.",
     14,
-    finalY + 40,
+    280,
   );
 
-  doc.text("for " + (settings.shop_name || "Battery Shop"), 150, finalY + 45);
-  doc.text("Authorised Signatory", 150, finalY + 55);
+  doc.setFont("helvetica", "bold");
+  doc.text("for " + (settings.shop_name || "Battery Shop"), 150, 285);
+  doc.setFont("helvetica", "normal");
+  doc.text("Authorised Signatory", 150, 290);
 
   doc.save(`Invoice_${sale.customer_name || "Customer"}.pdf`);
 };
 
-// Helper function to convert numbers to words (Basic implementation for INR)
 function numberToWords(num) {
   if (num === 0) return "Zero";
   const a = [
