@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Battery, Wrench, Package, Shield, Home } from "lucide-react";
+import {
+  LogOut,
+  Battery,
+  Wrench,
+  Package,
+  Shield,
+  Home,
+  Menu,
+  X,
+} from "lucide-react";
 import Overview from "./Overview";
 import Inventory from "./Inventory";
 import Sales from "./Sales";
@@ -12,6 +21,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("home");
   const [isAdmin, setIsAdmin] = useState(false);
   const [shopName, setShopName] = useState("Battery CRM");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile drawer state
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -41,6 +51,11 @@ export default function Dashboard() {
     await supabase.auth.signOut();
   };
 
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    setIsSidebarOpen(false); // Close drawer when tab is selected
+  };
+
   let tabs = [
     { id: "home", name: "Home", icon: Home },
     { id: "sales", name: "Sales", icon: Battery },
@@ -54,30 +69,55 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row p-4 gap-4">
-      <div className="md:w-64 bg-zinc-900/50 backdrop-blur-xl border border-white/5 p-4 rounded-2xl flex md:flex-col items-center md:items-start gap-4">
-        {/* Mobile Top Bar (Shop Name + Logout Icon) */}
-        <div className="flex items-center justify-between w-full md:hidden">
-          <h1 className="text-sm font-semibold tracking-tight text-white/90 uppercase truncate">
+      {/* Mobile Top Bar with Hamburger Icon */}
+      <div className="md:hidden flex items-center justify-between p-2 mb-2">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="text-white/80 hover:text-white p-2 bg-zinc-900/50 rounded-xl border border-white/5"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <h1 className="text-sm font-semibold tracking-tight text-white/90 uppercase truncate">
+          {shopName}
+        </h1>
+        <div className="w-9"></div> {/* Spacer to center title */}
+      </div>
+
+      {/* Mobile Sidebar Overlay (Drawer) */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar (Desktop static, Mobile sliding drawer) */}
+      <motion.div
+        className={`md:w-64 bg-zinc-900/80 backdrop-blur-xl border border-white/5 p-4 rounded-2xl flex md:flex-col items-center md:items-start gap-4 fixed md:relative inset-y-0 left-0 z-50 md:z-0 w-64 h-full md:h-auto transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+      >
+        <div className="flex justify-between items-center w-full">
+          <h1 className="text-base font-semibold tracking-tight text-white/90 uppercase">
             {shopName}
           </h1>
           <button
-            onClick={handleLogout}
-            className="text-red-400 bg-red-500/10 p-2 rounded-lg flex-shrink-0"
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden text-white/40 hover:text-white"
           >
-            <LogOut className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Desktop Shop Name */}
-        <h1 className="hidden md:block text-base font-semibold tracking-tight mb-6 text-white/90 uppercase">
-          {shopName}
-        </h1>
-
-        <nav className="flex md:flex-col gap-2 w-full justify-around md:justify-start overflow-x-auto">
+        <nav className="flex md:flex-col gap-2 w-full justify-around md:justify-start overflow-x-auto md:overflow-visible">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
               className={`relative flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 w-full justify-center md:justify-start text-sm font-medium flex-shrink-0
                   ${activeTab === tab.id ? "text-white" : "text-white/40 hover:text-white/80 hover:bg-white/5"}`}
             >
@@ -89,12 +129,11 @@ export default function Dashboard() {
                 />
               )}
               <tab.icon className="w-4 h-4 relative z-10" />
-              <span className="hidden md:inline relative z-10">{tab.name}</span>
+              <span className="relative z-10">{tab.name}</span>
             </button>
           ))}
         </nav>
 
-        {/* Desktop Logout Button */}
         <button
           onClick={handleLogout}
           className="mt-auto hidden md:flex items-center gap-3 px-4 py-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 w-full text-sm font-medium"
@@ -102,8 +141,18 @@ export default function Dashboard() {
           <LogOut className="w-4 h-4" />
           <span>Logout</span>
         </button>
-      </div>
 
+        {/* Mobile Logout (Inside Drawer) */}
+        <button
+          onClick={handleLogout}
+          className="md:hidden flex items-center gap-3 px-4 py-2.5 mt-4 text-red-400 bg-red-500/10 rounded-xl transition-all duration-200 w-full text-sm font-medium"
+        >
+          <LogOut className="w-4 h-4" />
+          <span>Logout</span>
+        </button>
+      </motion.div>
+
+      {/* Main Content Area */}
       <div className="flex-1 bg-zinc-900/30 backdrop-blur-xl border border-white/5 rounded-2xl p-6 md:p-8 overflow-y-auto">
         <AnimatePresence mode="wait">
           <motion.div
