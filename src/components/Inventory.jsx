@@ -9,6 +9,7 @@ import {
   Pencil,
   Search,
   ArrowUpDown,
+  ChevronDown,
 } from "lucide-react";
 
 export default function Inventory({ isAdmin }) {
@@ -18,6 +19,9 @@ export default function Inventory({ isAdmin }) {
   const [editingItem, setEditingItem] = useState(null);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
+  const [expandedId, setExpandedId] = useState(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [deleteText, setDeleteText] = useState("");
 
   const [form, setForm] = useState({
     brand: "",
@@ -54,6 +58,7 @@ export default function Inventory({ isAdmin }) {
       price: item.price || "",
     });
     setShowForm(true);
+    setExpandedId(null);
   };
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -80,6 +85,9 @@ export default function Inventory({ isAdmin }) {
 
   const handleDelete = async (id) => {
     await supabase.from("inventory").delete().eq("id", id);
+    setDeleteConfirmId(null);
+    setDeleteText("");
+    setExpandedId(null);
     fetchInventory();
   };
 
@@ -149,65 +157,145 @@ export default function Inventory({ isAdmin }) {
         </div>
       </div>
 
-      <div className="border border-white/5 rounded-2xl overflow-x-auto">
-        <table className="w-full min-w-[500px] text-left">
-          <thead className="bg-white/5 text-white/50 text-xs uppercase tracking-wider">
-            <tr>
-              <th className="p-4 font-medium">Brand</th>
-              <th className="p-4 font-medium">Model</th>
-              <th className="p-4 font-medium">Type</th>
-              <th className="p-4 font-medium">Price (₹)</th>
-              <th className="p-4 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="5" className="p-8 text-center text-white/40">
-                  Loading...
-                </td>
-              </tr>
-            ) : displayedItems.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="p-8 text-center text-white/40">
-                  No batteries found.
-                </td>
-              </tr>
-            ) : (
-              displayedItems.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-t border-white/5 hover:bg-white/5 transition-colors"
+      {/* Accordion List */}
+      <div className="space-y-2">
+        {loading ? (
+          <div className="p-8 text-center text-white/40">Loading...</div>
+        ) : displayedItems.length === 0 ? (
+          <div className="p-8 text-center text-white/40">
+            No batteries found.
+          </div>
+        ) : (
+          displayedItems.map((item) => (
+            <div
+              key={item.id}
+              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden"
+            >
+              <div
+                onClick={() =>
+                  setExpandedId(expandedId === item.id ? null : item.id)
+                }
+                className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
+              >
+                <div className="flex-1 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
+                    <Package className="w-5 h-5 text-white/40" />
+                  </div>
+                  <div>
+                    <div className="text-white/90 font-medium">
+                      {item.brand} {item.model}
+                    </div>
+                    <div className="text-white/40 text-xs">
+                      {item.type} • ₹{item.price || "-"}
+                    </div>
+                  </div>
+                </div>
+                <motion.div
+                  animate={{ rotate: expandedId === item.id ? 180 : 0 }}
                 >
-                  <td className="p-4 text-white/90 font-medium">
-                    {item.brand}
-                  </td>
-                  <td className="p-4 text-white/70">{item.model}</td>
-                  <td className="p-4 text-white/70">{item.type}</td>
-                  <td className="p-4 text-white/70">{item.price || "-"}</td>
-                  <td className="p-4 text-right">
-                    <div className="flex justify-end gap-3">
-                      <button
-                        onClick={() => openEditForm(item)}
-                        className="text-white/30 hover:text-white transition-colors"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                      {isAdmin && (
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="text-white/30 hover:text-red-400 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                  <ChevronDown className="w-5 h-5 text-white/30" />
+                </motion.div>
+              </div>
+
+              <AnimatePresence>
+                {expandedId === item.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="p-4 border-t border-white/5 bg-black/20">
+                      <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                        <div>
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Brand
+                          </span>
+                          <span className="text-white/90">{item.brand}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Model
+                          </span>
+                          <span className="text-white/90">{item.model}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Type
+                          </span>
+                          <span className="text-white/90">{item.type}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Price
+                          </span>
+                          <span className="text-white/90">
+                            ₹{item.price || "-"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {deleteConfirmId === item.id ? (
+                        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                          <p className="text-red-400 text-sm mb-2">
+                            Type DELETE to confirm
+                          </p>
+                          <input
+                            autoFocus
+                            value={deleteText}
+                            onChange={(e) =>
+                              setDeleteText(e.target.value.toUpperCase())
+                            }
+                            className="w-full bg-black/30 border border-red-500/30 rounded-lg px-3 py-2 text-white mb-2 outline-none"
+                            placeholder="DELETE"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                deleteText === "DELETE"
+                                  ? handleDelete(item.id)
+                                  : alert("Text doesn't match")
+                              }
+                              className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-red-600"
+                            >
+                              Confirm Delete
+                            </button>
+                            <button
+                              onClick={() => {
+                                setDeleteConfirmId(null);
+                                setDeleteText("");
+                              }}
+                              className="px-4 bg-zinc-700 text-white py-2 rounded-lg text-sm"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => openEditForm(item)}
+                            className="flex-1 flex items-center justify-center gap-2 bg-white/10 text-white py-2 rounded-lg text-sm hover:bg-white/20 transition-colors"
+                          >
+                            <Pencil className="w-4 h-4" /> Edit
+                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={() => setDeleteConfirmId(item.id)}
+                              className="px-4 flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-2 rounded-lg text-sm hover:bg-red-500/20 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" /> Delete
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))
+        )}
       </div>
 
       <AnimatePresence>

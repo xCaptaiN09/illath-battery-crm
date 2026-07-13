@@ -9,6 +9,8 @@ import {
   Search,
   ArrowUpDown,
   Filter,
+  ChevronDown,
+  Wrench,
 } from "lucide-react";
 
 export default function Service({ isAdmin }) {
@@ -19,6 +21,9 @@ export default function Service({ isAdmin }) {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [expandedId, setExpandedId] = useState(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [deleteText, setDeleteText] = useState("");
 
   const emptyForm = {
     customer_name: "",
@@ -56,6 +61,7 @@ export default function Service({ isAdmin }) {
     setEditingItem(item);
     setForm(item);
     setShowForm(true);
+    setExpandedId(null);
   };
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -63,7 +69,6 @@ export default function Service({ isAdmin }) {
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
-
     const uploadedUrls = [...(form.image_urls || [])];
     for (const file of files) {
       if (uploadedUrls.length >= 4) {
@@ -86,12 +91,11 @@ export default function Service({ isAdmin }) {
     setForm({ ...form, image_urls: uploadedUrls });
   };
 
-  const handleRemoveImage = (urlToRemove) => {
+  const handleRemoveImage = (urlToRemove) =>
     setForm({
       ...form,
       image_urls: form.image_urls.filter((url) => url !== urlToRemove),
     });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -116,6 +120,9 @@ export default function Service({ isAdmin }) {
 
   const handleDelete = async (id) => {
     await supabase.from("service").delete().eq("id", id);
+    setDeleteConfirmId(null);
+    setDeleteText("");
+    setExpandedId(null);
     fetchService();
   };
 
@@ -137,7 +144,6 @@ export default function Service({ isAdmin }) {
           item.battery_brand?.toLowerCase().includes(search.toLowerCase()) ||
           item.serial_number?.toLowerCase().includes(search.toLowerCase())),
     );
-
     if (sort === "newest")
       filtered.sort(
         (a, b) => new Date(b.date_received) - new Date(a.date_received),
@@ -146,7 +152,6 @@ export default function Service({ isAdmin }) {
       filtered.sort(
         (a, b) => new Date(a.date_received) - new Date(b.date_received),
       );
-
     return filtered;
   }, [records, search, sort, filterStatus]);
 
@@ -210,98 +215,187 @@ export default function Service({ isAdmin }) {
         </div>
       </div>
 
-      <div className="border border-white/5 rounded-2xl overflow-x-auto">
-        <table className="w-full min-w-[700px] text-left">
-          <thead className="bg-white/5 text-white/50 text-xs uppercase tracking-wider">
-            <tr>
-              <th className="p-4 font-medium">Customer</th>
-              <th className="p-4 font-medium">Battery Details</th>
-              <th className="p-4 font-medium">Issue</th>
-              <th className="p-4 font-medium">Received</th>
-              <th className="p-4 font-medium">Status</th>
-              <th className="p-4 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="6" className="p-8 text-center text-white/40">
-                  Loading...
-                </td>
-              </tr>
-            ) : displayedRecords.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="p-8 text-center text-white/40">
-                  No service records found.
-                </td>
-              </tr>
-            ) : (
-              displayedRecords.map((svc) => (
-                <tr
-                  key={svc.id}
-                  className="border-t border-white/5 hover:bg-white/5 transition-colors"
-                >
-                  <td className="p-4">
+      {/* Accordion List */}
+      <div className="space-y-2">
+        {loading ? (
+          <div className="p-8 text-center text-white/40">Loading...</div>
+        ) : displayedRecords.length === 0 ? (
+          <div className="p-8 text-center text-white/40">
+            No service records found.
+          </div>
+        ) : (
+          displayedRecords.map((svc) => (
+            <div
+              key={svc.id}
+              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden"
+            >
+              <div
+                onClick={() =>
+                  setExpandedId(expandedId === svc.id ? null : svc.id)
+                }
+                className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
+              >
+                <div className="flex-1 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
+                    <Wrench className="w-5 h-5 text-white/40" />
+                  </div>
+                  <div className="flex-1">
                     <div className="text-white/90 font-medium">
-                      {svc.customer_name}
-                    </div>
-                    <div className="text-white/40 text-xs">{svc.phone}</div>
-                  </td>
-                  <td className="p-4">
-                    <div className="text-white/90 font-medium">
-                      {svc.battery_brand}
+                      {svc.customer_name}{" "}
+                      <span className="text-white/40 font-normal text-xs">
+                        ({svc.phone})
+                      </span>
                     </div>
                     <div className="text-white/40 text-xs">
+                      {svc.battery_brand}{" "}
                       {svc.serial_number || svc.battery_model}
                     </div>
-                  </td>
-                  <td className="p-4 text-white/70 text-sm max-w-xs truncate">
-                    {svc.issue || "-"}
-                  </td>
-                  <td className="p-4 text-white/70 text-sm">
-                    {svc.date_received
-                      ? new Date(svc.date_received).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td className="p-4">
-                    <select
-                      value={svc.status}
-                      onChange={(e) =>
-                        handleStatusChange(svc.id, e.target.value)
-                      }
-                      className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"}`}
-                    >
-                      <option>Pending</option>
-                      <option>Charging</option>
-                      <option>Ready</option>
-                      <option>Completed</option>
-                      <option>Handed Over</option>
-                      <option>Unrepairable</option>
-                    </select>
-                  </td>
-                  <td className="p-4 text-right">
-                    <div className="flex justify-end gap-3">
-                      <button
-                        onClick={() => openEditForm(svc)}
-                        className="text-white/30 hover:text-white transition-colors"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                      {isAdmin && (
-                        <button
-                          onClick={() => handleDelete(svc.id)}
-                          className="text-white/30 hover:text-red-400 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                  </div>
+                  <select
+                    value={svc.status}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => handleStatusChange(svc.id, e.target.value)}
+                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"}`}
+                  >
+                    <option>Pending</option>
+                    <option>Charging</option>
+                    <option>Ready</option>
+                    <option>Completed</option>
+                    <option>Handed Over</option>
+                    <option>Unrepairable</option>
+                  </select>
+                </div>
+                <motion.div
+                  animate={{ rotate: expandedId === svc.id ? 180 : 0 }}
+                  className="ml-4"
+                >
+                  <ChevronDown className="w-5 h-5 text-white/30" />
+                </motion.div>
+              </div>
+
+              <AnimatePresence>
+                {expandedId === svc.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="p-4 border-t border-white/5 bg-black/20">
+                      <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                        <div>
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Date Received
+                          </span>
+                          <span className="text-white/90">
+                            {svc.date_received
+                              ? new Date(svc.date_received).toLocaleDateString()
+                              : "-"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Serial Number
+                          </span>
+                          <span className="text-white/90">
+                            {svc.serial_number || "-"}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Issue
+                          </span>
+                          <span className="text-white/90">
+                            {svc.issue || "-"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {svc.image_urls?.length > 0 && (
+                        <div className="mb-4">
+                          <span className="text-white/40 uppercase text-xs block mb-2">
+                            Attached Photos
+                          </span>
+                          <div className="flex flex-wrap gap-2">
+                            {svc.image_urls.map((url, idx) => (
+                              <a
+                                key={idx}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <img
+                                  src={url}
+                                  alt={`Upload ${idx}`}
+                                  className="w-16 h-16 object-cover rounded-lg border border-white/10 hover:opacity-80"
+                                />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {deleteConfirmId === svc.id ? (
+                        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                          <p className="text-red-400 text-sm mb-2">
+                            Type DELETE to confirm
+                          </p>
+                          <input
+                            autoFocus
+                            value={deleteText}
+                            onChange={(e) =>
+                              setDeleteText(e.target.value.toUpperCase())
+                            }
+                            className="w-full bg-black/30 border border-red-500/30 rounded-lg px-3 py-2 text-white mb-2 outline-none"
+                            placeholder="DELETE"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                deleteText === "DELETE"
+                                  ? handleDelete(svc.id)
+                                  : alert("Text doesn't match")
+                              }
+                              className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-red-600"
+                            >
+                              Confirm Delete
+                            </button>
+                            <button
+                              onClick={() => {
+                                setDeleteConfirmId(null);
+                                setDeleteText("");
+                              }}
+                              className="px-4 bg-zinc-700 text-white py-2 rounded-lg text-sm"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => openEditForm(svc)}
+                            className="flex-1 flex items-center justify-center gap-2 bg-white/10 text-white py-2 rounded-lg text-sm hover:bg-white/20 transition-colors"
+                          >
+                            <Pencil className="w-4 h-4" /> Edit
+                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={() => setDeleteConfirmId(svc.id)}
+                              className="px-4 flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-2 rounded-lg text-sm hover:bg-red-500/20 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" /> Delete
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))
+        )}
       </div>
 
       <AnimatePresence>
