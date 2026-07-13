@@ -249,18 +249,18 @@ export default function Service({ isAdmin }) {
                 }
                 className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
               >
-                <div className="flex-1 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
+                <div className="flex-1 flex items-center gap-4 min-w-0">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 flex-shrink-0">
                     <Wrench className="w-5 h-5 text-white/40" />
                   </div>
-                  <div className="flex-1">
-                    <div className="text-white/90 font-medium">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white/90 font-medium truncate">
                       {svc.customer_name}{" "}
                       <span className="text-white/40 font-normal text-xs">
                         ({svc.phone})
                       </span>
                     </div>
-                    <div className="text-white/40 text-xs font-mono">
+                    <div className="text-white/40 text-xs font-mono truncate">
                       {svc.battery_brand}{" "}
                       {svc.serial_number || svc.battery_model}
                     </div>
@@ -269,7 +269,7 @@ export default function Service({ isAdmin }) {
                     value={svc.status}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleStatusChange(svc.id, e.target.value)}
-                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"}`}
+                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer max-w-[110px] md:max-w-none truncate ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"}`}
                   >
                     <option>Received</option>
                     <option>Under Testing</option>
@@ -281,7 +281,7 @@ export default function Service({ isAdmin }) {
                 </div>
                 <motion.div
                   animate={{ rotate: expandedId === svc.id ? 180 : 0 }}
-                  className="ml-4"
+                  className="ml-4 flex-shrink-0"
                 >
                   <ChevronDown className="w-5 h-5 text-white/30" />
                 </motion.div>

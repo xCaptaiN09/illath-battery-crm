@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Battery, Wrench, Package, Shield } from "lucide-react";
+import { LogOut, Battery, Wrench, Package, Shield, Home } from "lucide-react";
+import Overview from "./Overview";
 import Inventory from "./Inventory";
 import Sales from "./Sales";
 import Service from "./Service";
 import AdminPanel from "./AdminPanel";
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("sales");
+  const [activeTab, setActiveTab] = useState("home");
   const [isAdmin, setIsAdmin] = useState(false);
   const [shopName, setShopName] = useState("Battery CRM");
 
@@ -41,6 +42,7 @@ export default function Dashboard() {
   };
 
   let tabs = [
+    { id: "home", name: "Home", icon: Home },
     { id: "sales", name: "Sales", icon: Battery },
     { id: "service", name: "Service", icon: Wrench },
     { id: "inventory", name: "Inventory", icon: Package },
@@ -96,6 +98,7 @@ export default function Dashboard() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
+            {activeTab === "home" && <Overview />}
             {activeTab === "sales" && <Sales isAdmin={isAdmin} />}
             {activeTab === "service" && <Service isAdmin={isAdmin} />}
             {activeTab === "inventory" && <Inventory isAdmin={isAdmin} />}
