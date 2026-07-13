@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Check, X, Save, ChevronDown, Mail } from "lucide-react";
+import { motion } from "framer-motion";
+import { Save, Mail } from "lucide-react";
 
 export default function AdminPanel() {
   const [users, setUsers] = useState([]);
@@ -14,7 +14,6 @@ export default function AdminPanel() {
     shop_state: "",
   });
   const [savingSettings, setSavingSettings] = useState(false);
-  const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -67,6 +66,12 @@ export default function AdminPanel() {
     if (error) alert("Error saving settings: " + error.message);
     else alert("Shop settings saved successfully!");
     setSavingSettings(false);
+  };
+
+  const statusColors = {
+    Active: "bg-green-500/10 text-green-400 border-green-500/20",
+    Suspended: "bg-red-500/10 text-red-400 border-red-500/20",
+    "Always Active": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
   };
 
   return (
@@ -153,11 +158,10 @@ export default function AdminPanel() {
         </button>
       </div>
 
-      {/* Users Accordion List */}
+      {/* Users List with Dropdown Action */}
       <div className="bg-blue-500/5 border border-blue-500/10 text-blue-400/80 text-xs p-3 rounded-xl mb-4">
         Note: Suspended workers remain in the list. They can still log in, but
-        cannot see any shop data. Click "Approve" to restore their access at any
-        time.
+        cannot see any shop data.
       </div>
 
       <div className="space-y-2">
@@ -166,22 +170,24 @@ export default function AdminPanel() {
         ) : users.length === 0 ? (
           <div className="p-8 text-center text-white/40">No users found.</div>
         ) : (
-          users.map((user) => (
-            <div
-              key={user.id}
-              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden"
-            >
+          users.map((user) => {
+            const currentStatus =
+              user.role === "admin"
+                ? "Always Active"
+                : user.approved
+                  ? "Active"
+                  : "Suspended";
+
+            return (
               <div
-                onClick={() =>
-                  setExpandedId(expandedId === user.id ? null : user.id)
-                }
-                className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                key={user.id}
+                className="bg-zinc-900/50 border border-white/5 rounded-xl p-4 flex items-center justify-between gap-4"
               >
-                <div className="flex-1 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
+                <div className="flex items-center gap-4 flex-1 overflow-hidden">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 flex-shrink-0">
                     <Mail className="w-5 h-5 text-white/40" />
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 overflow-hidden">
                     <div className="text-white/90 font-medium text-sm truncate">
                       {user.email}
                     </div>
@@ -189,54 +195,29 @@ export default function AdminPanel() {
                       {user.role}
                     </div>
                   </div>
-                  {user.role !== "admin" && (
-                    <span
-                      className={`text-xs font-medium px-2 py-1 rounded-lg ${user.approved ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}
-                    >
-                      {user.approved ? "Active" : "Suspended"}
-                    </span>
-                  )}
                 </div>
-                {user.role !== "admin" && (
-                  <motion.div
-                    animate={{ rotate: expandedId === user.id ? 180 : 0 }}
-                    className="ml-4"
+
+                {user.role === "admin" ? (
+                  <span
+                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border whitespace-nowrap ${statusColors[currentStatus]}`}
                   >
-                    <ChevronDown className="w-5 h-5 text-white/30" />
-                  </motion.div>
+                    {currentStatus}
+                  </span>
+                ) : (
+                  <select
+                    value={currentStatus}
+                    onChange={(e) =>
+                      toggleApproval(user.id, e.target.value === "Active")
+                    }
+                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer whitespace-nowrap ${statusColors[currentStatus]}`}
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Suspended">Suspended</option>
+                  </select>
                 )}
               </div>
-
-              <AnimatePresence>
-                {expandedId === user.id && user.role !== "admin" && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-4 border-t border-white/5 bg-black/20 flex justify-end gap-2">
-                      <button
-                        onClick={() => toggleApproval(user.id, user.approved)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${user.approved ? "bg-red-500/10 text-red-400 hover:bg-red-500/20" : "bg-green-500/10 text-green-400 hover:bg-green-500/20"}`}
-                      >
-                        {user.approved ? (
-                          <>
-                            <X className="w-4 h-4" /> Suspend Access
-                          </>
-                        ) : (
-                          <>
-                            <Check className="w-4 h-4" /> Approve Access
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
