@@ -11,12 +11,15 @@ import {
   Filter,
   ChevronDown,
   Wrench,
+  MapPin,
 } from "lucide-react";
+import MapPicker from "./MapPicker";
 
 export default function Service({ isAdmin }) {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
@@ -34,6 +37,9 @@ export default function Service({ isAdmin }) {
     issue: "",
     status: "Pending",
     date_received: new Date().toISOString().split("T")[0],
+    received_time: new Date().toTimeString().split(" ")[0],
+    customer_address: "",
+    map_coordinates: "",
     image_urls: [],
   };
   const [form, setForm] = useState(emptyForm);
@@ -96,6 +102,15 @@ export default function Service({ isAdmin }) {
       ...form,
       image_urls: form.image_urls.filter((url) => url !== urlToRemove),
     });
+
+  const handleMapConfirm = (location) => {
+    setForm((prev) => ({
+      ...prev,
+      customer_address: location.address,
+      map_coordinates: location.coordinates,
+    }));
+    setShowMap(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -215,7 +230,6 @@ export default function Service({ isAdmin }) {
         </div>
       </div>
 
-      {/* Accordion List */}
       <div className="space-y-2">
         {loading ? (
           <div className="p-8 text-center text-white/40">Loading...</div>
@@ -285,12 +299,13 @@ export default function Service({ isAdmin }) {
                       <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                         <div>
                           <span className="text-white/40 uppercase text-xs block mb-1">
-                            Date Received
+                            Date & Time
                           </span>
                           <span className="text-white/90">
                             {svc.date_received
                               ? new Date(svc.date_received).toLocaleDateString()
-                              : "-"}
+                              : "-"}{" "}
+                            {svc.received_time || ""}
                           </span>
                         </div>
                         <div>
@@ -307,6 +322,26 @@ export default function Service({ isAdmin }) {
                           </span>
                           <span className="text-white/90">
                             {svc.issue || "-"}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-white/40 uppercase text-xs block mb-1">
+                            Address
+                          </span>
+                          <span className="text-white/90">
+                            {svc.customer_address || "-"}{" "}
+                            {svc.map_coordinates ? (
+                              <a
+                                href={`https://maps.google.com/?q=${svc.map_coordinates}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-indigo-400 underline"
+                              >
+                                (View Map)
+                              </a>
+                            ) : (
+                              ""
+                            )}
                           </span>
                         </div>
                       </div>
@@ -454,6 +489,29 @@ export default function Service({ isAdmin }) {
                     />
                   </div>
                 </div>
+
+                <div>
+                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    Address & Location
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      name="customer_address"
+                      value={form.customer_address || ""}
+                      onChange={handleChange}
+                      className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      placeholder="Enter manually or use map"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMap(true)}
+                      className="bg-white/10 hover:bg-white/20 text-white px-3 rounded-xl text-xs font-medium flex items-center gap-1 whitespace-nowrap"
+                    >
+                      <MapPin className="w-4 h-4" /> Map
+                    </button>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
@@ -480,6 +538,7 @@ export default function Service({ isAdmin }) {
                     />
                   </div>
                 </div>
+
                 <div>
                   <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
                     Issue / Service Needed
@@ -493,15 +552,28 @@ export default function Service({ isAdmin }) {
                     placeholder="Not charging, low backup, etc."
                   ></textarea>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
-                      Date Received
+                      Date
                     </label>
                     <input
                       type="date"
                       name="date_received"
                       value={form.date_received || ""}
+                      onChange={handleChange}
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                      Time
+                    </label>
+                    <input
+                      type="time"
+                      name="received_time"
+                      value={form.received_time || ""}
                       onChange={handleChange}
                       className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
                     />
@@ -572,6 +644,15 @@ export default function Service({ isAdmin }) {
               </form>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showMap && (
+          <MapPicker
+            onConfirm={handleMapConfirm}
+            onClose={() => setShowMap(false)}
+          />
         )}
       </AnimatePresence>
     </div>

@@ -13,12 +13,14 @@ import {
   Battery,
   MapPin,
 } from "lucide-react";
+import MapPicker from "./MapPicker";
 
 export default function Sales({ isAdmin }) {
   const [records, setRecords] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
@@ -123,35 +125,13 @@ export default function Sales({ isAdmin }) {
       });
   };
 
-  const handleLocate = () => {
-    if (!navigator.geolocation)
-      return alert("Geolocation is not supported by your browser.");
-    setForm((prev) => ({ ...prev, customer_address: "Fetching location..." }));
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-          );
-          const data = await response.json();
-          const addr = data.display_name || `${latitude}, ${longitude}`;
-          setForm((prev) => ({
-            ...prev,
-            customer_address: addr,
-            map_coordinates: `${latitude}, ${longitude}`,
-          }));
-        } catch (err) {
-          setForm((prev) => ({
-            ...prev,
-            customer_address: "Unable to fetch address",
-            map_coordinates: `${latitude}, ${longitude}`,
-          }));
-        }
-      },
-      () =>
-        alert("Unable to retrieve your location. Please check permissions."),
-    );
+  const handleMapConfirm = (location) => {
+    setForm((prev) => ({
+      ...prev,
+      customer_address: location.address,
+      map_coordinates: location.coordinates,
+    }));
+    setShowMap(false);
   };
 
   const handleSubmit = async (e) => {
@@ -283,7 +263,6 @@ export default function Sales({ isAdmin }) {
         </div>
       </div>
 
-      {/* Accordion List */}
       <div className="space-y-2">
         {loading ? (
           <div className="p-8 text-center text-white/40">Loading...</div>
@@ -608,7 +587,7 @@ export default function Sales({ isAdmin }) {
                     />
                     <button
                       type="button"
-                      onClick={handleLocate}
+                      onClick={() => setShowMap(true)}
                       className="bg-white/10 hover:bg-white/20 text-white px-3 rounded-xl text-xs font-medium flex items-center gap-1 whitespace-nowrap"
                     >
                       <MapPin className="w-4 h-4" /> Map
@@ -819,6 +798,15 @@ export default function Sales({ isAdmin }) {
               </form>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showMap && (
+          <MapPicker
+            onConfirm={handleMapConfirm}
+            onClose={() => setShowMap(false)}
+          />
         )}
       </AnimatePresence>
     </div>
