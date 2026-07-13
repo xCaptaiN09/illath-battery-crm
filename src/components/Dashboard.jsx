@@ -10,36 +10,42 @@ import AdminPanel from "./AdminPanel";
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("sales");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [shopName, setShopName] = useState("Battery CRM");
 
   useEffect(() => {
-    const fetchRole = async () => {
+    const fetchInitialData = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        const { data } = await supabase
+        const { data: profile } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", user.id)
           .single();
-        if (data) setIsAdmin(data.role === "admin");
+        if (profile) setIsAdmin(profile.role === "admin");
       }
+
+      const { data: settings } = await supabase
+        .from("shop_settings")
+        .select("shop_name")
+        .eq("id", 1)
+        .single();
+      if (settings) setShopName(settings.shop_name);
     };
-    fetchRole();
+    fetchInitialData();
   }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
 
-  // Base tabs
   let tabs = [
     { id: "sales", name: "Sales", icon: Battery },
     { id: "service", name: "Service", icon: Wrench },
     { id: "inventory", name: "Inventory", icon: Package },
   ];
 
-  // Add Admin tab if user is admin
   if (isAdmin) {
     tabs.push({ id: "admin", name: "Admin", icon: Shield });
   }
@@ -48,7 +54,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row p-4 gap-4">
       <div className="md:w-64 bg-zinc-900/50 backdrop-blur-xl border border-white/5 p-4 rounded-2xl flex md:flex-col items-center md:items-start gap-4">
         <h1 className="hidden md:block text-base font-semibold tracking-tight mb-6 text-white/90 uppercase">
-          Illath Battery House
+          {shopName}
         </h1>
 
         <nav className="flex md:flex-col gap-2 w-full justify-around md:justify-start">

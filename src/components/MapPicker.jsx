@@ -1,10 +1,15 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { X, Search } from "lucide-react";
 
-// Fix for default icon issue in React-Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -26,10 +31,30 @@ function LocationMarker({ position, setPosition }) {
   );
 }
 
+// Component to automatically fly to location when it changes
+function ChangeMapView({ position }) {
+  const map = useMap();
+  useEffect(() => {
+    if (position) map.flyTo(position, 15, { duration: 1.5 });
+  }, [position, map]);
+  return null;
+}
+
 export default function MapPicker({ onConfirm, onClose }) {
   const [position, setPosition] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Get GPS Location on load
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) =>
+          setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => console.log("GPS denied or unavailable"),
+      );
+    }
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -45,7 +70,6 @@ export default function MapPicker({ onConfirm, onClose }) {
           lat: parseFloat(data[0].lat),
           lng: parseFloat(data[0].lon),
         });
-        // Fly to location is handled by key change in parent, but we can force it here if needed
       } else {
         alert("Location not found.");
       }
@@ -112,10 +136,10 @@ export default function MapPicker({ onConfirm, onClose }) {
           center={[10.8505, 76.2711]}
           zoom={10}
           style={{ height: "100%", width: "100%" }}
-          key={position ? `${position.lat}-${position.lng}` : "map"}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <LocationMarker position={position} setPosition={setPosition} />
+          <ChangeMapView position={position} />
         </MapContainer>
       </div>
 

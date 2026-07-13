@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { Shield, Check, X } from "lucide-react";
+import { Shield, Check, X, Save } from "lucide-react";
 
 export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState({
+    shop_name: "",
+    shop_address: "",
+    shop_phone: "",
+    shop_gstin: "",
+    shop_state: "",
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   useEffect(() => {
     fetchUsers();
+    fetchSettings();
   }, []);
 
   const fetchUsers = async () => {
@@ -20,6 +29,15 @@ export default function AdminPanel() {
     setLoading(false);
   };
 
+  const fetchSettings = async () => {
+    const { data } = await supabase
+      .from("shop_settings")
+      .select("*")
+      .eq("id", 1)
+      .single();
+    if (data) setSettings(data);
+  };
+
   const toggleApproval = async (userId, currentStatus) => {
     await supabase
       .from("profiles")
@@ -28,27 +46,120 @@ export default function AdminPanel() {
     fetchUsers();
   };
 
+  const handleSettingsChange = (e) =>
+    setSettings({ ...settings, [e.target.name]: e.target.value });
+
+  const handleSettingsSave = async () => {
+    setSavingSettings(true);
+    const { error } = await supabase
+      .from("shop_settings")
+      .update({
+        shop_name: settings.shop_name,
+        shop_address: settings.shop_address,
+        shop_phone: settings.shop_phone,
+        shop_gstin: settings.shop_gstin,
+        shop_state: settings.shop_state,
+      })
+      .eq("id", 1);
+
+    if (error) alert("Error saving settings: " + error.message);
+    else alert("Shop settings saved successfully!");
+    setSavingSettings(false);
+  };
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight mb-1">
             Admin Panel
           </h2>
           <p className="text-white/40 text-sm">
-            Approve new sign-ups or suspend worker access.
+            Manage shop settings and worker access.
           </p>
         </div>
       </div>
 
+      {/* Shop Settings Section */}
+      <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 mb-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <Save className="w-5 h-5 text-white/70" /> Shop Details (For Invoices)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-2">
+            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+              Shop Name
+            </label>
+            <input
+              name="shop_name"
+              value={settings.shop_name || ""}
+              onChange={handleSettingsChange}
+              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+            />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+              Shop Address
+            </label>
+            <input
+              name="shop_address"
+              value={settings.shop_address || ""}
+              onChange={handleSettingsChange}
+              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+              Shop Phone
+            </label>
+            <input
+              name="shop_phone"
+              value={settings.shop_phone || ""}
+              onChange={handleSettingsChange}
+              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+              Shop GSTIN
+            </label>
+            <input
+              name="shop_gstin"
+              value={settings.shop_gstin || ""}
+              onChange={handleSettingsChange}
+              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+              Shop State
+            </label>
+            <input
+              name="shop_state"
+              value={settings.shop_state || ""}
+              onChange={handleSettingsChange}
+              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+            />
+          </div>
+        </div>
+        <button
+          onClick={handleSettingsSave}
+          disabled={savingSettings}
+          className="mt-4 bg-white text-black font-medium py-2 px-4 rounded-xl text-sm hover:bg-white/90 transition-colors"
+        >
+          {savingSettings ? "Saving..." : "Save Settings"}
+        </button>
+      </div>
+
+      {/* Users Table */}
       <div className="bg-blue-500/5 border border-blue-500/10 text-blue-400/80 text-xs p-3 rounded-xl mb-4">
         Note: Suspended workers remain in the list. They can still log in, but
         cannot see any shop data. Click "Approve" to restore their access at any
         time.
       </div>
 
-      <div className="border border-white/5 rounded-2xl overflow-x-auto">
-        <table className="w-full min-w-[500px] text-left">
+      <div className="border border-white/5 rounded-2xl overflow-hidden">
+        <table className="w-full text-left">
           <thead className="bg-white/5 text-white/50 text-xs uppercase tracking-wider">
             <tr>
               <th className="p-4 font-medium">Email</th>
