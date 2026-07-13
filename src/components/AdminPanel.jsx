@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { motion } from "framer-motion";
-import { Save, Mail } from "lucide-react";
+import { Save, Mail, Check, X } from "lucide-react";
 
 export default function AdminPanel() {
   const [users, setUsers] = useState([]);
@@ -158,7 +157,7 @@ export default function AdminPanel() {
         </button>
       </div>
 
-      {/* Users List with Dropdown Action */}
+      {/* Users List */}
       <div className="bg-blue-500/5 border border-blue-500/10 text-blue-400/80 text-xs p-3 rounded-xl mb-4">
         Note: Suspended workers remain in the list. They can still log in, but
         cannot see any shop data.
@@ -181,13 +180,14 @@ export default function AdminPanel() {
             return (
               <div
                 key={user.id}
-                className="bg-zinc-900/50 border border-white/5 rounded-xl p-4 flex items-center justify-between gap-4"
+                className="bg-zinc-900/50 border border-white/5 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
-                <div className="flex items-center gap-4 flex-1 overflow-hidden">
+                {/* Left Side: User Info */}
+                <div className="flex items-center gap-4 overflow-hidden">
                   <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 flex-shrink-0">
                     <Mail className="w-5 h-5 text-white/40" />
                   </div>
-                  <div className="flex-1 overflow-hidden">
+                  <div className="overflow-hidden">
                     <div className="text-white/90 font-medium text-sm truncate">
                       {user.email}
                     </div>
@@ -197,24 +197,34 @@ export default function AdminPanel() {
                   </div>
                 </div>
 
-                {user.role === "admin" ? (
+                {/* Right Side: Status & Action */}
+                <div className="flex items-center gap-3 justify-between sm:justify-end border-t sm:border-t-0 sm:border-l border-white/5 pt-3 sm:pt-0 sm:pl-4 mt-3 sm:mt-0">
+                  {/* Status Pill */}
                   <span
                     className={`text-xs font-medium px-3 py-1.5 rounded-lg border whitespace-nowrap ${statusColors[currentStatus]}`}
                   >
                     {currentStatus}
                   </span>
-                ) : (
-                  <select
-                    value={currentStatus}
-                    onChange={(e) =>
-                      toggleApproval(user.id, e.target.value === "Active")
-                    }
-                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer whitespace-nowrap ${statusColors[currentStatus]}`}
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Suspended">Suspended</option>
-                  </select>
-                )}
+
+                  {/* Action Button */}
+                  {user.role !== "admin" && (
+                    <button
+                      onClick={() => toggleApproval(user.id, user.approved)}
+                      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors whitespace-nowrap
+                        ${user.approved ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20"}`}
+                    >
+                      {user.approved ? (
+                        <>
+                          <X className="w-3.5 h-3.5" /> Suspend
+                        </>
+                      ) : (
+                        <>
+                          <Check className="w-3.5 h-3.5" /> Approve
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })
