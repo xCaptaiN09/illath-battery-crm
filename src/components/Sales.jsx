@@ -12,12 +12,15 @@ import {
   ChevronDown,
   Battery,
   MapPin,
+  Download,
 } from "lucide-react";
 import MapPicker from "./MapPicker";
+import { generateInvoice } from "../utils/generateInvoice";
 
 export default function Sales({ isAdmin }) {
   const [records, setRecords] = useState([]);
   const [inventory, setInventory] = useState([]);
+  const [shopSettings, setShopSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [showMap, setShowMap] = useState(false);
@@ -52,6 +55,7 @@ export default function Sales({ isAdmin }) {
   useEffect(() => {
     fetchSales();
     fetchInventory();
+    fetchSettings();
   }, []);
 
   const fetchSales = async () => {
@@ -67,6 +71,15 @@ export default function Sales({ isAdmin }) {
   const fetchInventory = async () => {
     const { data } = await supabase.from("inventory").select("*");
     if (data) setInventory(data);
+  };
+
+  const fetchSettings = async () => {
+    const { data } = await supabase
+      .from("shop_settings")
+      .select("*")
+      .eq("id", 1)
+      .single();
+    if (data) setShopSettings(data);
   };
 
   const openNewForm = () => {
@@ -463,7 +476,13 @@ export default function Sales({ isAdmin }) {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex gap-2">
+                        <div className="flex flex-col md:flex-row gap-2">
+                          <button
+                            onClick={() => generateInvoice(sale, shopSettings)}
+                            className="flex-1 flex items-center justify-center gap-2 bg-indigo-500/10 text-indigo-400 py-2 rounded-lg text-sm hover:bg-indigo-500/20 transition-colors"
+                          >
+                            <Download className="w-4 h-4" /> Download Invoice
+                          </button>
                           <button
                             onClick={() => openEditForm(sale)}
                             className="flex-1 flex items-center justify-center gap-2 bg-white/10 text-white py-2 rounded-lg text-sm hover:bg-white/20 transition-colors"
