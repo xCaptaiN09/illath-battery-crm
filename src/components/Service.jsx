@@ -35,7 +35,7 @@ export default function Service({ isAdmin }) {
     battery_model: "",
     serial_number: "",
     issue: "",
-    status: "Pending",
+    status: "Received",
     date_received: new Date().toISOString().split("T")[0],
     received_time: new Date().toTimeString().split(" ")[0],
     customer_address: "",
@@ -142,10 +142,10 @@ export default function Service({ isAdmin }) {
   };
 
   const statusColors = {
-    Pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    Charging: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    Ready: "bg-green-500/10 text-green-400 border-green-500/20",
-    Completed: "bg-teal-500/10 text-teal-400 border-teal-500/20",
+    Received: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+    "Under Testing": "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    Charging: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+    "Ready for Delivery": "bg-green-500/10 text-green-400 border-green-500/20",
     "Handed Over": "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
     Unrepairable: "bg-red-500/10 text-red-400 border-red-500/20",
   };
@@ -209,10 +209,10 @@ export default function Service({ isAdmin }) {
             className="w-full md:w-auto bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-white text-sm focus:ring-1 focus:ring-white/30 focus:outline-none appearance-none"
           >
             <option value="all">All Statuses</option>
-            <option value="Pending">Pending</option>
+            <option value="Received">Received</option>
+            <option value="Under Testing">Under Testing</option>
             <option value="Charging">Charging</option>
-            <option value="Ready">Ready</option>
-            <option value="Completed">Completed</option>
+            <option value="Ready for Delivery">Ready for Delivery</option>
             <option value="Handed Over">Handed Over</option>
             <option value="Unrepairable">Unrepairable</option>
           </select>
@@ -260,7 +260,7 @@ export default function Service({ isAdmin }) {
                         ({svc.phone})
                       </span>
                     </div>
-                    <div className="text-white/40 text-xs">
+                    <div className="text-white/40 text-xs font-mono">
                       {svc.battery_brand}{" "}
                       {svc.serial_number || svc.battery_model}
                     </div>
@@ -271,10 +271,10 @@ export default function Service({ isAdmin }) {
                     onChange={(e) => handleStatusChange(svc.id, e.target.value)}
                     className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"}`}
                   >
-                    <option>Pending</option>
+                    <option>Received</option>
+                    <option>Under Testing</option>
                     <option>Charging</option>
-                    <option>Ready</option>
-                    <option>Completed</option>
+                    <option>Ready for Delivery</option>
                     <option>Handed Over</option>
                     <option>Unrepairable</option>
                   </select>
@@ -312,7 +312,7 @@ export default function Service({ isAdmin }) {
                           <span className="text-white/40 uppercase text-xs block mb-1">
                             Serial Number
                           </span>
-                          <span className="text-white/90">
+                          <span className="text-white/90 font-mono">
                             {svc.serial_number || "-"}
                           </span>
                         </div>
@@ -533,7 +533,7 @@ export default function Service({ isAdmin }) {
                       name="serial_number"
                       value={form.serial_number || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none font-mono"
                       placeholder="SN98765"
                     />
                   </div>
@@ -584,14 +584,14 @@ export default function Service({ isAdmin }) {
                     </label>
                     <select
                       name="status"
-                      value={form.status || "Pending"}
+                      value={form.status || "Received"}
                       onChange={handleChange}
                       className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
                     >
-                      <option>Pending</option>
+                      <option>Received</option>
+                      <option>Under Testing</option>
                       <option>Charging</option>
-                      <option>Ready</option>
-                      <option>Completed</option>
+                      <option>Ready for Delivery</option>
                       <option>Handed Over</option>
                       <option>Unrepairable</option>
                     </select>

@@ -48,7 +48,7 @@ export const generateInvoice = (sale, settings) => {
   doc.setFontSize(9);
   doc.setTextColor(80, 80, 80);
   doc.text(sale.customer_address || "", 14, 85, { maxWidth: 110 });
-  doc.text(`Phone: ${sale.phone || ""}", 14, 95`);
+  doc.text(`Phone: ${sale.phone || ""}`, 14, 95);
   doc.text(
     `GSTIN: ${sale.customer_gstin || "N/A"} | State: ${sale.customer_state || "N/A"}`,
     14,
@@ -57,8 +57,10 @@ export const generateInvoice = (sale, settings) => {
 
   // Calculations
   const mrp = sale.mrp || sale.price || 0;
-  const discount = sale.discount || 0;
-  const finalPrice = mrp - discount;
+  const discountVal = sale.discount || 0;
+  const discountAmount =
+    sale.discount_type === "percent" ? mrp * (discountVal / 100) : discountVal;
+  const finalPrice = mrp - discountAmount;
   const taxableValue = finalPrice / 1.18;
   const cgst = taxableValue * 0.09;
   const sgst = taxableValue * 0.09;
@@ -111,11 +113,17 @@ export const generateInvoice = (sale, settings) => {
   doc.text("MRP:", summaryX, summaryY);
   doc.text(`Rs. ${mrp.toFixed(2)}`, 196, summaryY, { align: "right" });
 
-  if (discount > 0) {
+  if (discountAmount > 0) {
     summaryY += 6;
     doc.setTextColor(200, 50, 50);
-    doc.text("Discount:", summaryX, summaryY);
-    doc.text(`- Rs. ${discount.toFixed(2)}`, 196, summaryY, { align: "right" });
+    const discountLabel =
+      sale.discount_type === "percent"
+        ? `Discount (${discountVal}%):`
+        : "Discount:";
+    doc.text(discountLabel, summaryX, summaryY);
+    doc.text(`- Rs. ${discountAmount.toFixed(2)}`, 196, summaryY, {
+      align: "right",
+    });
   }
 
   summaryY += 6;

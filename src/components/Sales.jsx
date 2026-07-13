@@ -43,6 +43,7 @@ export default function Sales({ isAdmin }) {
     hsn_code: "85071000",
     mrp: "",
     discount: "",
+    discount_type: "flat",
     warranty_months: "12",
     sale_date: new Date().toISOString().split("T")[0],
     sale_time: new Date().toTimeString().split(" ")[0],
@@ -153,12 +154,16 @@ export default function Sales({ isAdmin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const mrp = parseFloat(form.mrp) || 0;
-    const discount = parseFloat(form.discount) || 0;
-    const finalPrice = mrp - discount;
+    const discountVal = parseFloat(form.discount) || 0;
+    const discountAmount =
+      form.discount_type === "percent"
+        ? mrp * (discountVal / 100)
+        : discountVal;
+    const finalPrice = mrp - discountAmount;
     const payload = {
       ...form,
       mrp: mrp,
-      discount: discount,
+      discount: discountVal,
       price: finalPrice,
       warranty_months: form.warranty_months
         ? parseInt(form.warranty_months)
@@ -195,8 +200,13 @@ export default function Sales({ isAdmin }) {
   };
 
   // Live calculation for Form UI
-  const liveFinalPrice =
-    (parseFloat(form.mrp) || 0) - (parseFloat(form.discount) || 0);
+  const liveMrp = parseFloat(form.mrp) || 0;
+  const liveDiscountVal = parseFloat(form.discount) || 0;
+  const liveDiscountAmount =
+    form.discount_type === "percent"
+      ? liveMrp * (liveDiscountVal / 100)
+      : liveDiscountVal;
+  const liveFinalPrice = liveMrp - liveDiscountAmount;
 
   const uniqueBrands = useMemo(
     () => [
@@ -414,7 +424,10 @@ export default function Sales({ isAdmin }) {
                               Discount
                             </span>
                             <span className="text-red-400 font-mono">
-                              - ₹{sale.discount || "0"}
+                              - ₹
+                              {sale.discount_type === "percent"
+                                ? `${sale.discount}%`
+                                : sale.discount || "0"}
                             </span>
                           </div>
                           <div>
@@ -787,17 +800,39 @@ export default function Sales({ isAdmin }) {
                   </div>
                   <div>
                     <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
-                      Discount (₹)
+                      Discount
                     </label>
-                    <input
-                      type="number"
-                      name="discount"
-                      value={form.discount || ""}
-                      onChange={handleChange}
-                      readOnly={!isAdmin}
-                      className={`w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none font-mono ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
-                      placeholder="200"
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="number"
+                        name="discount"
+                        value={form.discount || ""}
+                        onChange={handleChange}
+                        readOnly={!isAdmin}
+                        className={`w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none font-mono ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
+                        placeholder="0"
+                      />
+                      <div className="flex items-center bg-black/30 border border-white/10 rounded-xl p-1">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm({ ...form, discount_type: "flat" })
+                          }
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${form.discount_type === "flat" ? "bg-white text-black" : "text-white/50"}`}
+                        >
+                          ₹
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm({ ...form, discount_type: "percent" })
+                          }
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${form.discount_type === "percent" ? "bg-white text-black" : "text-white/50"}`}
+                        >
+                          %
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="bg-black/30 border border-white/10 rounded-xl p-3 flex justify-between items-center">
