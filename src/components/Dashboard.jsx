@@ -55,16 +55,30 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col md:flex-row p-4 gap-4">
       <div className="md:w-64 bg-zinc-900/50 backdrop-blur-xl border border-white/5 p-4 rounded-2xl flex md:flex-col items-center md:items-start gap-4">
+        {/* Mobile Top Bar (Shop Name + Logout Icon) */}
+        <div className="flex items-center justify-between w-full md:hidden">
+          <h1 className="text-sm font-semibold tracking-tight text-white/90 uppercase truncate">
+            {shopName}
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="text-red-400 bg-red-500/10 p-2 rounded-lg flex-shrink-0"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Desktop Shop Name */}
         <h1 className="hidden md:block text-base font-semibold tracking-tight mb-6 text-white/90 uppercase">
           {shopName}
         </h1>
 
-        <nav className="flex md:flex-col gap-2 w-full justify-around md:justify-start">
+        <nav className="flex md:flex-col gap-2 w-full justify-around md:justify-start overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 w-full justify-center md:justify-start text-sm font-medium
+              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 w-full justify-center md:justify-start text-sm font-medium flex-shrink-0
                   ${activeTab === tab.id ? "text-white" : "text-white/40 hover:text-white/80 hover:bg-white/5"}`}
             >
               {activeTab === tab.id && (
@@ -80,6 +94,7 @@ export default function Dashboard() {
           ))}
         </nav>
 
+        {/* Desktop Logout Button */}
         <button
           onClick={handleLogout}
           className="mt-auto hidden md:flex items-center gap-3 px-4 py-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 w-full text-sm font-medium"
@@ -105,14 +120,6 @@ export default function Dashboard() {
             {activeTab === "admin" && isAdmin && <AdminPanel />}
           </motion.div>
         </AnimatePresence>
-
-        <button
-          onClick={handleLogout}
-          className="md:hidden mt-8 flex items-center gap-2 px-4 py-2 text-red-400 bg-red-500/10 rounded-xl w-full justify-center text-sm"
-        >
-          <LogOut className="w-4 h-4" />
-          <span>Logout</span>
-        </button>
       </div>
     </div>
   );
