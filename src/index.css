@@ -11,21 +11,13 @@
 
 body {
     margin: 0;
-    font-family:
-        "Plus Jakarta Sans",
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
-    transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
-    /* Light mode unified soft gray background */
+    font-family: "Plus Jakarta Sans", sans-serif;
+    transition: background-color 0.3s ease;
     background-color: #f4f4f5;
     color: #0a0a0a;
 }
 
 .dark body {
-    /* Dark mode pure black background */
     background-color: #000000;
     color: #ffffff;
 }
@@ -44,23 +36,35 @@ body {
 .dark ::-webkit-scrollbar-thumb {
     background: #1f1f1f;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: #a1a1aa;
-}
 
-/* Rally-style premium solid cards (No borders, just soft shadows) */
 .glass-card {
     background: #ffffff;
-    border: none;
-    box-shadow:
-        0 4px 20px -8px rgba(0, 0, 0, 0.08),
-        0 1px 3px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e4e4e7;
+    box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass-card {
     background: #0a0a0a;
     border: 1px solid #1f1f1f;
-    box-shadow:
-        0 4px 20px -8px rgba(0, 0, 0, 1),
-        0 1px 3px -1px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 1);
+}
+
+/* Premium Input Style for consistency */
+.premium-input {
+    background: #f4f4f5;
+    border: 1px solid #e4e4e7;
+    color: #0a0a0a;
+}
+.premium-input:focus {
+    border-color: #6366f1;
+    background: #ffffff;
+}
+.dark .premium-input {
+    background: #18181b;
+    border: 1px solid #27272a;
+    color: #ffffff;
+}
+.dark .premium-input:focus {
+    border-color: #6366f1;
+    background: #0a0a0a;
 }

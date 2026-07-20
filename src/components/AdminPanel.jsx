@@ -68,106 +68,110 @@ export default function AdminPanel() {
   };
 
   const statusColors = {
-    Active: "bg-green-500/10 text-green-400 border-green-500/20",
-    Suspended: "bg-red-500/10 text-red-400 border-red-500/20",
-    "Always Active": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+    Active:
+      "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",
+    Suspended: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+    "Always Active":
+      "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
   };
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
-            Admin Panel
-          </h2>
-          <p className="text-white/40 text-sm">
-            Manage shop settings and worker access.
-          </p>
-        </div>
+      <div className="mb-8">
+        <h2 className="text-4xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
+          Admin Panel
+        </h2>
+        <p className="text-base text-zinc-500 dark:text-zinc-500 font-medium">
+          Manage shop settings and worker access.
+        </p>
       </div>
 
-      {/* Shop Settings Section */}
-      <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 mb-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Save className="w-5 h-5 text-white/70" /> Shop Details (For Invoices)
+      {/* Shop Settings */}
+      <div className="glass-card p-8 rounded-3xl mb-8">
+        <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-zinc-900 dark:text-white">
+          <Save className="w-5 h-5" /> Shop Details (For Invoices)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-1 md:col-span-2">
-            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
               Shop Name
             </label>
             <input
               name="shop_name"
               value={settings.shop_name || ""}
               onChange={handleSettingsChange}
-              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+              className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
             />
           </div>
           <div className="col-span-1 md:col-span-2">
-            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
               Shop Address
             </label>
             <input
               name="shop_address"
               value={settings.shop_address || ""}
               onChange={handleSettingsChange}
-              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+              className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
             />
           </div>
           <div>
-            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
               Shop Phone
             </label>
             <input
               name="shop_phone"
               value={settings.shop_phone || ""}
               onChange={handleSettingsChange}
-              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+              className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
             />
           </div>
           <div>
-            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
               Shop GSTIN
             </label>
             <input
               name="shop_gstin"
               value={settings.shop_gstin || ""}
               onChange={handleSettingsChange}
-              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+              className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors font-mono"
             />
           </div>
           <div>
-            <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
               Shop State
             </label>
             <input
               name="shop_state"
               value={settings.shop_state || ""}
               onChange={handleSettingsChange}
-              className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+              className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
             />
           </div>
         </div>
         <button
           onClick={handleSettingsSave}
           disabled={savingSettings}
-          className="mt-4 bg-white text-black font-medium py-2 px-4 rounded-xl text-sm hover:bg-white/90 transition-colors"
+          className="mt-6 bg-zinc-900 dark:bg-white text-white dark:text-black font-bold py-3 px-6 rounded-xl text-sm hover:opacity-80 transition-opacity"
         >
           {savingSettings ? "Saving..." : "Save Settings"}
         </button>
       </div>
 
       {/* Users List */}
-      <div className="bg-blue-500/5 border border-blue-500/10 text-blue-400/80 text-xs p-3 rounded-xl mb-4">
+      <div className="glass-card text-xs p-4 rounded-2xl mb-4 text-zinc-600 dark:text-zinc-400">
         Note: Suspended workers remain in the list. They can still log in, but
         cannot see any shop data.
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {loading ? (
-          <div className="p-8 text-center text-white/40">Loading...</div>
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
+            Loading...
+          </div>
         ) : users.length === 0 ? (
-          <div className="p-8 text-center text-white/40">No users found.</div>
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
+            No users found.
+          </div>
         ) : (
           users.map((user) => {
             const currentStatus =
@@ -176,42 +180,34 @@ export default function AdminPanel() {
                 : user.approved
                   ? "Active"
                   : "Suspended";
-
             return (
               <div
                 key={user.id}
-                className="bg-zinc-900/50 border border-white/5 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                className="glass-card p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
-                {/* Left Side: User Info */}
                 <div className="flex items-center gap-4 overflow-hidden">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 flex-shrink-0">
-                    <Mail className="w-5 h-5 text-white/40" />
+                  <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                   </div>
                   <div className="overflow-hidden">
-                    <div className="text-white/90 font-medium text-sm truncate">
+                    <div className="text-zinc-900 dark:text-white font-bold text-sm truncate">
                       {user.email}
                     </div>
-                    <div className="text-white/40 text-xs capitalize">
+                    <div className="text-zinc-500 dark:text-zinc-500 text-xs capitalize">
                       {user.role}
                     </div>
                   </div>
                 </div>
-
-                {/* Right Side: Status & Action */}
-                <div className="flex items-center gap-3 justify-between sm:justify-end border-t sm:border-t-0 sm:border-l border-white/5 pt-3 sm:pt-0 sm:pl-4 mt-3 sm:mt-0">
-                  {/* Status Pill */}
+                <div className="flex items-center gap-3 justify-between sm:justify-end border-t sm:border-t-0 sm:border-l border-zinc-200 dark:border-zinc-800 pt-3 sm:pt-0 sm:pl-4 mt-3 sm:mt-0">
                   <span
-                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border whitespace-nowrap ${statusColors[currentStatus]}`}
+                    className={`text-xs font-bold px-3 py-1.5 rounded-lg border whitespace-nowrap ${statusColors[currentStatus]}`}
                   >
                     {currentStatus}
                   </span>
-
-                  {/* Action Button */}
                   {user.role !== "admin" && (
                     <button
                       onClick={() => toggleApproval(user.id, user.approved)}
-                      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors whitespace-nowrap
-                        ${user.approved ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20"}`}
+                      className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border transition-colors whitespace-nowrap ${user.approved ? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:bg-green-500/20"}`}
                     >
                       {user.approved ? (
                         <>

@@ -82,15 +82,15 @@ export default function Overview() {
   return (
     <div>
       <div className="mb-12">
-        <h2 className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-3 text-zinc-900 dark:text-white">
+        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
           Dashboard
         </h2>
-        <p className="text-lg text-zinc-500 dark:text-zinc-500 font-medium">
+        <p className="text-base text-zinc-500 dark:text-zinc-500 font-medium">
           Overview of your shop's performance this month.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {loading ? (
           <div className="col-span-4 p-8 text-center text-zinc-500 dark:text-zinc-400">
             Loading stats...
@@ -102,10 +102,10 @@ export default function Overview() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
-              className="glass-card p-8 rounded-2xl flex flex-col justify-between min-h-[180px]"
+              className="glass-card p-6 rounded-3xl flex flex-col justify-between min-h-[160px]"
             >
               <div className="flex justify-between items-start mb-6">
-                <span className="text-xs text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-bold">
+                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-bold">
                   {card.title}
                 </span>
                 <div className={`p-2 rounded-xl bg-black/5 dark:bg-white/5`}>
@@ -113,7 +113,7 @@ export default function Overview() {
                 </div>
               </div>
               <div
-                className={`text-4xl md:text-5xl font-extrabold font-sans ${card.color}`}
+                className={`text-3xl md:text-4xl font-extrabold font-sans ${card.color}`}
               >
                 {card.value}
               </div>
@@ -122,8 +122,8 @@ export default function Overview() {
         )}
       </div>
 
-      <div className="mt-8 glass-card text-base p-8 rounded-2xl flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-        <CheckCircle2 className="w-8 h-8 text-teal-500 dark:text-teal-400 flex-shrink-0" />
+      <div className="mt-8 glass-card text-sm p-6 rounded-3xl flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
+        <CheckCircle2 className="w-6 h-6 text-teal-500 dark:text-teal-400 flex-shrink-0" />
         <p>
           All systems are running smoothly. Use the sidebar to add new sales,
           service tickets, or manage inventory.
