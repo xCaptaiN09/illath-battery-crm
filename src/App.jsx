@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
+import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import { Loader2 } from "lucide-react";
@@ -21,13 +22,13 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-900">
+      <div className="flex h-screen items-center justify-center bg-black dark:bg-black">
         <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
       </div>
     );
   }
 
-  return <>{session ? <Dashboard /> : <Login />}</>;
+  return <ThemeProvider>{session ? <Dashboard /> : <Login />}</ThemeProvider>;
 }
 
 export default App;
