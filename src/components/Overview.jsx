@@ -18,24 +18,17 @@ export default function Overview() {
 
   const fetchStats = async () => {
     setLoading(true);
-
-    // Get current month start date
     const now = new Date();
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    // Fetch Sales
     const { data: salesData } = await supabase
       .from("sales")
       .select("price, sale_date");
-
-    // Fetch Service
     const { data: serviceData } = await supabase
       .from("service")
       .select("status");
 
-    let revenue = 0;
-    let salesCount = 0;
-
+    let revenue = 0,
+      salesCount = 0;
     if (salesData) {
       salesData.forEach((sale) => {
         if (sale.sale_date && new Date(sale.sale_date) >= firstDay) {
@@ -45,16 +38,13 @@ export default function Overview() {
       });
     }
 
-    let activeService = 0;
-    let readyService = 0;
-
+    let activeService = 0,
+      readyService = 0;
     if (serviceData) {
       serviceData.forEach((svc) => {
-        if (["Received", "Under Testing", "Charging"].includes(svc.status)) {
+        if (["Received", "Under Testing", "Charging"].includes(svc.status))
           activeService += 1;
-        } else if (svc.status === "Ready for Delivery") {
-          readyService += 1;
-        }
+        else if (svc.status === "Ready for Delivery") readyService += 1;
       });
     }
 
@@ -68,47 +58,41 @@ export default function Overview() {
       value: `₹${stats.revenue.toLocaleString()}`,
       icon: IndianRupee,
       color: "text-green-400",
-      bg: "bg-green-500/10",
     },
     {
       title: "Sales This Month",
       value: stats.salesCount,
       icon: TrendingUp,
       color: "text-indigo-400",
-      bg: "bg-indigo-500/10",
     },
     {
       title: "Active Service Tickets",
       value: stats.activeService,
       icon: Wrench,
       color: "text-yellow-400",
-      bg: "bg-yellow-500/10",
     },
     {
       title: "Ready for Delivery",
       value: stats.readyService,
       icon: CheckCircle2,
       color: "text-teal-400",
-      bg: "bg-teal-500/10",
     },
   ];
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
-            Dashboard
-          </h2>
-          <p className="text-white/40 text-sm">
-            Overview of your shop's performance this month.
-          </p>
-        </div>
+      <div className="mb-10">
+        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 dark:text-white light:text-zinc-900">
+          Dashboard
+        </h2>
+        <p className="text-lg dark:text-zinc-400 light:text-zinc-600 font-light">
+          Overview of your shop's performance this month.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {loading ? (
-          <div className="col-span-4 p-8 text-center text-white/40">
+          <div className="col-span-4 p-8 text-center dark:text-zinc-400 light:text-zinc-600">
             Loading stats...
           </div>
         ) : (
@@ -118,18 +102,20 @@ export default function Overview() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5 flex flex-col justify-between"
+              className="glass-card p-6 rounded-2xl flex flex-col justify-between min-h-[160px]"
             >
               <div className="flex justify-between items-start mb-4">
-                <span className="text-xs text-white/50 uppercase tracking-wider">
+                <span className="text-xs dark:text-zinc-400 light:text-zinc-500 uppercase tracking-widest font-medium">
                   {card.title}
                 </span>
-                <div className={`p-2 rounded-lg ${card.bg}`}>
+                <div
+                  className={`p-2 rounded-xl dark:bg-white/5 light:bg-black/5`}
+                >
                   <card.icon className={`w-4 h-4 ${card.color}`} />
                 </div>
               </div>
               <div
-                className={`text-2xl md:text-3xl font-bold font-mono ${card.color}`}
+                className={`text-3xl md:text-4xl font-extrabold font-mono ${card.color}`}
               >
                 {card.value}
               </div>
@@ -138,8 +124,8 @@ export default function Overview() {
         )}
       </div>
 
-      <div className="mt-8 bg-blue-500/5 border border-blue-500/10 text-blue-400/80 text-sm p-4 rounded-xl flex items-center gap-3">
-        <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+      <div className="mt-8 glass-card text-sm p-6 rounded-2xl flex items-center gap-4 dark:text-zinc-300 light:text-zinc-700">
+        <CheckCircle2 className="w-6 h-6 text-teal-400 flex-shrink-0" />
         <p>
           All systems are running smoothly. Use the sidebar to add new sales,
           service tickets, or manage inventory.
