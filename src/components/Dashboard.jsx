@@ -65,9 +65,9 @@ export default function Dashboard() {
   if (isAdmin) tabs.push({ id: "admin", name: "Admin", icon: Shield });
 
   return (
-    <div className="min-h-screen p-4 flex flex-col md:flex-row gap-4 relative transition-colors bg-gray-50 dark:bg-black">
+    <div className="min-h-screen p-4 flex flex-col md:flex-row gap-4 relative transition-colors bg-zinc-100 dark:bg-black">
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-2 mb-2 sticky top-0 z-30 transition-colors bg-gray-50 dark:bg-black">
+      <div className="md:hidden flex items-center justify-between p-2 mb-2 sticky top-0 z-30 transition-colors bg-zinc-100 dark:bg-black">
         <button
           onClick={() => setIsSidebarOpen(true)}
           className="p-2 glass-card rounded-xl text-zinc-900 dark:text-white"
