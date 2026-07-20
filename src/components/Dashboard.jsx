@@ -65,21 +65,21 @@ export default function Dashboard() {
   if (isAdmin) tabs.push({ id: "admin", name: "Admin", icon: Shield });
 
   return (
-    <div className="min-h-screen p-4 flex flex-col md:flex-row gap-4 relative transition-colors dark:bg-black light:bg-gray-50">
+    <div className="min-h-screen p-4 flex flex-col md:flex-row gap-4 relative transition-colors bg-gray-50 dark:bg-black">
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-2 mb-2 sticky top-0 z-30 transition-colors dark:bg-black light:bg-gray-50">
+      <div className="md:hidden flex items-center justify-between p-2 mb-2 sticky top-0 z-30 transition-colors bg-gray-50 dark:bg-black">
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="p-2 glass-card rounded-xl dark:text-white light:text-zinc-900"
+          className="p-2 glass-card rounded-xl text-zinc-900 dark:text-white"
         >
           <Menu className="w-5 h-5" />
         </button>
-        <h1 className="text-sm font-bold tracking-tight dark:text-white light:text-zinc-900 uppercase truncate">
+        <h1 className="text-sm font-bold tracking-tight text-zinc-900 dark:text-white uppercase truncate">
           {shopName}
         </h1>
         <button
           onClick={toggleTheme}
-          className="p-2 glass-card rounded-xl dark:text-white light:text-zinc-900"
+          className="p-2 glass-card rounded-xl text-zinc-900 dark:text-white"
         >
           {theme === "dark" ? (
             <Sun className="w-5 h-5 text-yellow-400" />
@@ -106,12 +106,12 @@ export default function Dashboard() {
         className={`glass-card p-6 flex flex-col gap-4 z-50 fixed top-0 left-0 h-full w-72 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:static md:translate-x-0 md:w-64 md:h-auto md:min-h-[calc(100vh-2rem)] md:z-0 rounded-3xl`}
       >
         <div className="flex justify-between items-center w-full mb-8">
-          <h1 className="text-lg font-extrabold tracking-tight dark:text-white light:text-zinc-900 uppercase truncate">
+          <h1 className="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white uppercase truncate">
             {shopName}
           </h1>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="md:hidden dark:text-white light:text-zinc-900"
+            className="md:hidden text-zinc-900 dark:text-white"
           >
             <X className="w-5 h-5" />
           </button>
@@ -122,7 +122,7 @@ export default function Dashboard() {
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab.id)}
-              className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full text-sm font-semibold ${activeTab === tab.id ? "dark:text-white light:text-white dark:bg-white/10 light:bg-zinc-900" : "dark:text-zinc-400 light:text-zinc-600 dark:hover:bg-white/5 light:hover:bg-black/5"}`}
+              className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full text-sm font-semibold ${activeTab === tab.id ? "text-white dark:text-white bg-zinc-900 dark:bg-white/10" : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"}`}
             >
               <tab.icon className="w-5 h-5" />
               <span>{tab.name}</span>
@@ -132,7 +132,7 @@ export default function Dashboard() {
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 mt-auto dark:text-zinc-400 light:text-zinc-600 dark:hover:text-red-400 light:hover:text-red-500 dark:hover:bg-red-500/10 light:hover:bg-red-500/10 rounded-xl transition-all duration-200 w-full text-sm font-semibold"
+          className="flex items-center gap-3 px-4 py-3 mt-auto text-zinc-600 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 w-full text-sm font-semibold"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>
@@ -144,7 +144,7 @@ export default function Dashboard() {
         <div className="hidden md:flex justify-end mb-4">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl dark:bg-white/5 light:bg-black/5 dark:text-white light:text-zinc-900"
+            className="p-2 rounded-xl bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white"
           >
             {theme === "dark" ? (
               <Sun className="w-5 h-5 text-yellow-400" />

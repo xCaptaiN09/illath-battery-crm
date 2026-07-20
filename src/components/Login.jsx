@@ -37,11 +37,11 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-black dark:bg-black light:bg-gray-50 p-4 transition-colors">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors bg-gray-50 dark:bg-black">
       {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
-        className="absolute top-6 right-6 p-3 rounded-full bg-zinc-800/50 dark:bg-zinc-800/50 light:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/10 light:border-black/10"
+        className="absolute top-6 right-6 p-3 rounded-full bg-white dark:bg-zinc-800/50 backdrop-blur-md border border-black/5 dark:border-white/10"
       >
         {theme === "dark" ? (
           <Sun className="w-5 h-5 text-yellow-400" />
@@ -57,13 +57,13 @@ export default function Login() {
         className="w-full max-w-md flex flex-col items-center text-center"
       >
         <div className="p-4 bg-indigo-500/10 rounded-3xl mb-6 border border-indigo-500/20">
-          <Battery className="w-8 h-8 text-indigo-400 dark:text-indigo-400 light:text-indigo-600" />
+          <Battery className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
         </div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight mb-2 dark:text-white light:text-zinc-900">
+        <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-zinc-900 dark:text-white">
           Illath Battery House
         </h1>
-        <p className="text-lg text-zinc-400 dark:text-zinc-400 light:text-zinc-600 mb-10 font-light">
+        <p className="text-lg text-zinc-500 dark:text-zinc-400 mb-10 font-light">
           {mode === "login"
             ? "Welcome back. Sign in to manage your shop."
             : "Create a worker account to get started."}
@@ -79,7 +79,7 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-zinc-700 dark:border-zinc-700 light:border-zinc-300 px-1 py-3 text-lg dark:text-white light:text-zinc-900 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full bg-transparent border-b-2 border-zinc-300 dark:border-zinc-700 px-1 py-3 text-lg text-zinc-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors"
               placeholder="you@example.com"
             />
           </div>
@@ -92,7 +92,7 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-zinc-700 dark:border-zinc-700 light:border-zinc-300 px-1 py-3 text-lg dark:text-white light:text-zinc-900 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full bg-transparent border-b-2 border-zinc-300 dark:border-zinc-700 px-1 py-3 text-lg text-zinc-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors"
               placeholder="••••••••"
             />
           </div>
@@ -103,7 +103,7 @@ export default function Login() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20 mt-4"
+                className="text-red-500 dark:text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20 mt-4"
               >
                 {error}
               </motion.p>
@@ -113,7 +113,7 @@ export default function Login() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-green-400 text-sm bg-green-500/10 p-3 rounded-lg border border-green-500/20 mt-4"
+                className="text-green-500 dark:text-green-400 text-sm bg-green-500/10 p-3 rounded-lg border border-green-500/20 mt-4"
               >
                 Account created! Please ask the Admin to approve you, then sign
                 in.
@@ -148,7 +148,7 @@ export default function Login() {
               setError(null);
               setSignupSuccess(false);
             }}
-            className="text-sm text-zinc-500 hover:text-indigo-400 transition-colors font-medium"
+            className="text-sm text-zinc-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors font-medium"
           >
             {mode === "login"
               ? "Need an account? Sign Up"

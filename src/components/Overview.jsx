@@ -57,42 +57,42 @@ export default function Overview() {
       title: "Revenue This Month",
       value: `₹${stats.revenue.toLocaleString()}`,
       icon: IndianRupee,
-      color: "text-green-400",
+      color: "text-green-500 dark:text-green-400",
     },
     {
       title: "Sales This Month",
       value: stats.salesCount,
       icon: TrendingUp,
-      color: "text-indigo-400",
+      color: "text-indigo-500 dark:text-indigo-400",
     },
     {
       title: "Active Service Tickets",
       value: stats.activeService,
       icon: Wrench,
-      color: "text-yellow-400",
+      color: "text-yellow-500 dark:text-yellow-400",
     },
     {
       title: "Ready for Delivery",
       value: stats.readyService,
       icon: CheckCircle2,
-      color: "text-teal-400",
+      color: "text-teal-500 dark:text-teal-400",
     },
   ];
 
   return (
     <div>
       <div className="mb-10">
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 dark:text-white light:text-zinc-900">
+        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 text-zinc-900 dark:text-white">
           Dashboard
         </h2>
-        <p className="text-lg dark:text-zinc-400 light:text-zinc-600 font-light">
+        <p className="text-lg text-zinc-500 dark:text-zinc-400 font-light">
           Overview of your shop's performance this month.
         </p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {loading ? (
-          <div className="col-span-4 p-8 text-center dark:text-zinc-400 light:text-zinc-600">
+          <div className="col-span-4 p-8 text-center text-zinc-500 dark:text-zinc-400">
             Loading stats...
           </div>
         ) : (
@@ -105,12 +105,10 @@ export default function Overview() {
               className="glass-card p-6 rounded-2xl flex flex-col justify-between min-h-[160px]"
             >
               <div className="flex justify-between items-start mb-4">
-                <span className="text-xs dark:text-zinc-400 light:text-zinc-500 uppercase tracking-widest font-medium">
+                <span className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest font-medium">
                   {card.title}
                 </span>
-                <div
-                  className={`p-2 rounded-xl dark:bg-white/5 light:bg-black/5`}
-                >
+                <div className={`p-2 rounded-xl bg-black/5 dark:bg-white/5`}>
                   <card.icon className={`w-4 h-4 ${card.color}`} />
                 </div>
               </div>
@@ -124,8 +122,8 @@ export default function Overview() {
         )}
       </div>
 
-      <div className="mt-8 glass-card text-sm p-6 rounded-2xl flex items-center gap-4 dark:text-zinc-300 light:text-zinc-700">
-        <CheckCircle2 className="w-6 h-6 text-teal-400 flex-shrink-0" />
+      <div className="mt-8 glass-card text-sm p-6 rounded-2xl flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
+        <CheckCircle2 className="w-6 h-6 text-teal-500 dark:text-teal-400 flex-shrink-0" />
         <p>
           All systems are running smoothly. Use the sidebar to add new sales,
           service tickets, or manage inventory.

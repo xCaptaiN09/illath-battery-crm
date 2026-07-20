@@ -19,42 +19,13 @@ body {
     transition:
         background-color 0.3s ease,
         color 0.3s ease;
-}
-
-/* Dark Theme Ambient Lighting (Cred/Rally style) */
-.dark body {
-    background-color: #000000;
-    background-image:
-        radial-gradient(
-            circle at 10% 0%,
-            rgba(99, 102, 241, 0.1) 0%,
-            transparent 40%
-        ),
-        radial-gradient(
-            circle at 90% 100%,
-            rgba(217, 70, 239, 0.08) 0%,
-            transparent 40%
-        );
-    background-attachment: fixed;
-    color: #ffffff;
-}
-
-/* Light Theme Clean Minimalist */
-.light body {
-    background-color: #f8f9fa;
-    background-image:
-        radial-gradient(
-            circle at 10% 0%,
-            rgba(99, 102, 241, 0.05) 0%,
-            transparent 40%
-        ),
-        radial-gradient(
-            circle at 90% 100%,
-            rgba(217, 70, 239, 0.04) 0%,
-            transparent 40%
-        );
-    background-attachment: fixed;
+    background-color: #f4f4f5; /* Light mode background */
     color: #0f172a;
+}
+
+.dark body {
+    background-color: #000000; /* Dark mode background */
+    color: #ffffff;
 }
 
 /* Minimalist custom scrollbar */
@@ -66,23 +37,29 @@ body {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(128, 128, 128, 0.3);
+    background: #d4d4d8;
     border-radius: 10px;
 }
+.dark ::-webkit-scrollbar-thumb {
+    background: #27272a;
+}
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(128, 128, 128, 0.5);
+    background: #a1a1aa;
 }
 
-/* Utility class for premium glass cards */
+/* Utility class for premium solid cards (Replaces glass-card) */
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
-.light .glass-card {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+.dark .glass-card {
+    background: #0a0a0a;
+    border: 1px solid #1f1f1f;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.8),
+        0 2px 4px -2px rgba(0, 0, 0, 0.8);
 }
