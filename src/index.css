@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -19,16 +19,17 @@ body {
     transition:
         background-color 0.3s ease,
         color 0.3s ease;
-    background-color: #f4f4f5; /* Light mode background */
-    color: #0f172a;
+    /* Light mode off-white background */
+    background-color: #f3f3f3;
+    color: #0a0a0a;
 }
 
 .dark body {
-    background-color: #000000; /* Dark mode background */
+    /* Dark mode pure black background */
+    background-color: #000000;
     color: #ffffff;
 }
 
-/* Minimalist custom scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -41,25 +42,26 @@ body {
     border-radius: 10px;
 }
 .dark ::-webkit-scrollbar-thumb {
-    background: #27272a;
+    background: #1f1f1f;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #a1a1aa;
 }
 
-/* Utility class for premium solid cards (Replaces glass-card) */
+/* Rally-style premium solid cards */
 .glass-card {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
+    border: none;
+    /* Soft, diffused shadow */
     box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        0 12px 40px -12px rgba(0, 0, 0, 0.1),
+        0 4px 12px -6px rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass-card {
     background: #0a0a0a;
-    border: 1px solid #1f1f1f;
+    border: 1px solid #1a1a1a;
     box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.8),
-        0 2px 4px -2px rgba(0, 0, 0, 0.8);
+        0 12px 40px -12px rgba(0, 0, 0, 1),
+        0 4px 12px -6px rgba(0, 0, 0, 0.8);
 }
