@@ -57,25 +57,29 @@ export default function Overview() {
       title: "Revenue This Month",
       value: `₹${stats.revenue.toLocaleString()}`,
       icon: IndianRupee,
-      color: "text-green-500 dark:text-green-400",
+      color: "text-green-500",
+      bg: "bg-green-500/10",
     },
     {
       title: "Sales This Month",
       value: stats.salesCount,
       icon: TrendingUp,
-      color: "text-indigo-500 dark:text-indigo-400",
+      color: "text-indigo-500",
+      bg: "bg-indigo-500/10",
     },
     {
       title: "Active Service Tickets",
       value: stats.activeService,
       icon: Wrench,
-      color: "text-yellow-500 dark:text-yellow-400",
+      color: "text-yellow-500",
+      bg: "bg-yellow-500/10",
     },
     {
       title: "Ready for Delivery",
       value: stats.readyService,
       icon: CheckCircle2,
-      color: "text-teal-500 dark:text-teal-400",
+      color: "text-teal-500",
+      bg: "bg-teal-500/10",
     },
   ];
 
@@ -108,13 +112,11 @@ export default function Overview() {
                 <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-bold">
                   {card.title}
                 </span>
-                <div className={`p-2 rounded-xl bg-black/5 dark:bg-white/5`}>
+                <div className={`p-2 rounded-xl ${card.bg}`}>
                   <card.icon className={`w-4 h-4 ${card.color}`} />
                 </div>
               </div>
-              <div
-                className={`text-3xl md:text-4xl font-extrabold font-sans ${card.color}`}
-              >
+              <div className="text-3xl md:text-4xl font-extrabold font-sans text-zinc-900 dark:text-white">
                 {card.value}
               </div>
             </motion.div>
@@ -123,7 +125,7 @@ export default function Overview() {
       </div>
 
       <div className="mt-8 glass-card text-sm p-6 rounded-3xl flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-        <CheckCircle2 className="w-6 h-6 text-teal-500 dark:text-teal-400 flex-shrink-0" />
+        <CheckCircle2 className="w-6 h-6 text-teal-500 flex-shrink-0" />
         <p>
           All systems are running smoothly. Use the sidebar to add new sales,
           service tickets, or manage inventory.

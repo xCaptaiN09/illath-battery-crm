@@ -121,41 +121,41 @@ export default function Inventory({ isAdmin }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
-            Battery Inventory
+          <h2 className="text-4xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
+            Inventory
           </h2>
-          <p className="text-white/40 text-sm">
+          <p className="text-base text-zinc-500 dark:text-zinc-500 font-medium">
             Add and manage available battery stock & pricing.
           </p>
         </div>
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={openNewForm}
-          className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-xl text-sm font-medium hover:bg-white/90 transition-colors"
+          className="flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-3 rounded-xl text-sm font-bold hover:opacity-80 transition-opacity"
         >
           <Plus className="w-4 h-4" /> Add Battery
         </motion.button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 mb-4">
+      <div className="flex flex-col md:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
             placeholder="Search brand, model, type..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:ring-1 focus:ring-white/30 focus:outline-none"
+            className="premium-input w-full rounded-xl pl-11 pr-4 py-3 outline-none transition-colors text-sm"
           />
         </div>
         <div className="relative">
-          <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
+          <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="w-full md:w-auto bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-white text-sm focus:ring-1 focus:ring-white/30 focus:outline-none appearance-none"
+            className="premium-input w-full md:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -165,34 +165,36 @@ export default function Inventory({ isAdmin }) {
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {loading ? (
-          <div className="p-8 text-center text-white/40">Loading...</div>
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
+            Loading...
+          </div>
         ) : displayedItems.length === 0 ? (
-          <div className="p-8 text-center text-white/40">
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
             No batteries found.
           </div>
         ) : (
           displayedItems.map((item) => (
             <div
               key={item.id}
-              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden"
+              className="glass-card rounded-2xl overflow-hidden"
             >
               <div
                 onClick={() =>
                   setExpandedId(expandedId === item.id ? null : item.id)
                 }
-                className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                className="flex items-center justify-between p-4 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
                 <div className="flex-1 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
-                    <Package className="w-5 h-5 text-white/40" />
+                  <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                    <Package className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                   </div>
                   <div>
-                    <div className="text-white/90 font-medium">
+                    <div className="text-zinc-900 dark:text-white font-bold">
                       {item.brand} {item.model}
                     </div>
-                    <div className="text-white/40 text-xs font-mono">
+                    <div className="text-zinc-500 dark:text-zinc-500 text-xs font-mono">
                       {item.type} • ₹{item.price || "-"}
                     </div>
                   </div>
@@ -200,7 +202,7 @@ export default function Inventory({ isAdmin }) {
                 <motion.div
                   animate={{ rotate: expandedId === item.id ? 180 : 0 }}
                 >
-                  <ChevronDown className="w-5 h-5 text-white/30" />
+                  <ChevronDown className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
                 </motion.div>
               </div>
 
@@ -212,47 +214,53 @@ export default function Inventory({ isAdmin }) {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 border-t border-white/5 bg-black/20">
+                    <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
                       <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                         <div>
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Brand
                           </span>
-                          <span className="text-white/90">{item.brand}</span>
+                          <span className="text-zinc-900 dark:text-white">
+                            {item.brand}
+                          </span>
                         </div>
                         <div>
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Model
                           </span>
-                          <span className="text-white/90">{item.model}</span>
+                          <span className="text-zinc-900 dark:text-white">
+                            {item.model}
+                          </span>
                         </div>
                         <div>
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Type
                           </span>
-                          <span className="text-white/90">{item.type}</span>
+                          <span className="text-zinc-900 dark:text-white">
+                            {item.type}
+                          </span>
                         </div>
                         <div>
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Base Price
                           </span>
-                          <span className="text-white/90 font-mono">
+                          <span className="text-zinc-900 dark:text-white font-mono">
                             ₹{item.price || "-"}
                           </span>
                         </div>
                         <div className="col-span-2">
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             HSN Code
                           </span>
-                          <span className="text-white/90 font-mono">
+                          <span className="text-zinc-900 dark:text-white font-mono">
                             {item.hsn_code || "-"}
                           </span>
                         </div>
                       </div>
 
                       {deleteConfirmId === item.id ? (
-                        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                          <p className="text-red-400 text-sm mb-2">
+                        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                          <p className="text-red-500 dark:text-red-400 text-sm mb-2 font-medium">
                             Type DELETE to confirm
                           </p>
                           <input
@@ -261,7 +269,7 @@ export default function Inventory({ isAdmin }) {
                             onChange={(e) =>
                               setDeleteText(e.target.value.toUpperCase())
                             }
-                            className="w-full bg-black/30 border border-red-500/30 rounded-lg px-3 py-2 text-white mb-2 outline-none"
+                            className="premium-input w-full rounded-lg px-3 py-2 mb-2 outline-none text-white"
                             placeholder="DELETE"
                           />
                           <div className="flex gap-2">
@@ -280,7 +288,7 @@ export default function Inventory({ isAdmin }) {
                                 setDeleteConfirmId(null);
                                 setDeleteText("");
                               }}
-                              className="px-4 bg-zinc-700 text-white py-2 rounded-lg text-sm"
+                              className="px-4 bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white py-2 rounded-lg text-sm"
                             >
                               Cancel
                             </button>
@@ -290,14 +298,14 @@ export default function Inventory({ isAdmin }) {
                         <div className="flex gap-2">
                           <button
                             onClick={() => openEditForm(item)}
-                            className="flex-1 flex items-center justify-center gap-2 bg-white/10 text-white py-2 rounded-lg text-sm hover:bg-white/20 transition-colors"
+                            className="flex-1 flex items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white py-2 rounded-lg text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
                           >
                             <Pencil className="w-4 h-4" /> Edit
                           </button>
                           {isAdmin && (
                             <button
                               onClick={() => setDeleteConfirmId(item.id)}
-                              className="px-4 flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-2 rounded-lg text-sm hover:bg-red-500/20 transition-colors"
+                              className="px-4 flex items-center justify-center gap-2 bg-red-500/10 text-red-500 dark:text-red-400 py-2 rounded-lg text-sm hover:bg-red-500/20 transition-colors"
                             >
                               <Trash2 className="w-4 h-4" /> Delete
                             </button>
@@ -326,24 +334,23 @@ export default function Inventory({ isAdmin }) {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl"
+              className="glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-semibold flex items-center gap-2">
-                  <Package className="w-5 h-5 text-white/70" />{" "}
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
                   {editingItem ? "Edit Battery" : "Add New Battery"}
                 </h3>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="text-white/40 hover:text-white"
+                  className="text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                  <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                     Brand
                   </label>
                   <input
@@ -351,12 +358,12 @@ export default function Inventory({ isAdmin }) {
                     name="brand"
                     value={form.brand}
                     onChange={handleChange}
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all"
+                    className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                     placeholder="e.g. Exide"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                  <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                     Model
                   </label>
                   <input
@@ -364,13 +371,13 @@ export default function Inventory({ isAdmin }) {
                     name="model"
                     value={form.model}
                     onChange={handleChange}
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all"
+                    className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                     placeholder="e.g. DIN55"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Type
                     </label>
                     <input
@@ -378,7 +385,7 @@ export default function Inventory({ isAdmin }) {
                       name="type"
                       value={form.type}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                       placeholder="Select or type"
                     />
                     <datalist id="battery-types">
@@ -391,7 +398,7 @@ export default function Inventory({ isAdmin }) {
                     </datalist>
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Base Price (₹)
                     </label>
                     <input
@@ -399,27 +406,27 @@ export default function Inventory({ isAdmin }) {
                       name="price"
                       value={form.price}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all font-mono"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors font-mono"
                       placeholder="6500"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                  <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                     HSN Code
                   </label>
                   <input
                     name="hsn_code"
                     value={form.hsn_code}
                     onChange={handleChange}
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none transition-all font-mono"
+                    className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors font-mono"
                     placeholder="85071000"
                   />
                 </div>
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-white text-black font-medium py-3 rounded-xl mt-4 hover:bg-white/90 transition-colors"
+                  className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl mt-6 hover:bg-indigo-500 transition-colors"
                 >
                   {editingItem ? "Update Battery" : "Save Battery"}
                 </motion.button>

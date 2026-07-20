@@ -142,12 +142,18 @@ export default function Service({ isAdmin }) {
   };
 
   const statusColors = {
-    Received: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    "Under Testing": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    Charging: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    "Ready for Delivery": "bg-green-500/10 text-green-400 border-green-500/20",
-    "Handed Over": "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
-    Unrepairable: "bg-red-500/10 text-red-400 border-red-500/20",
+    Received:
+      "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    "Under Testing":
+      "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    Charging:
+      "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+    "Ready for Delivery":
+      "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",
+    "Handed Over":
+      "bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20",
+    Unrepairable:
+      "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
   };
 
   const displayedRecords = useMemo(() => {
@@ -172,41 +178,41 @@ export default function Service({ isAdmin }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
-            Service Records
+          <h2 className="text-4xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
+            Service
           </h2>
-          <p className="text-white/40 text-sm">
+          <p className="text-base text-zinc-500 dark:text-zinc-500 font-medium">
             Manage batteries brought in for charging or repair.
           </p>
         </div>
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={openNewForm}
-          className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-xl text-sm font-medium hover:bg-white/90 transition-colors"
+          className="flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-3 rounded-xl text-sm font-bold hover:opacity-80 transition-opacity"
         >
           <Plus className="w-4 h-4" /> New Service
         </motion.button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 mb-4">
+      <div className="flex flex-col md:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
             placeholder="Search name, phone, battery, serial..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:ring-1 focus:ring-white/30 focus:outline-none"
+            className="premium-input w-full rounded-xl pl-11 pr-4 py-3 outline-none transition-colors text-sm"
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
+          <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="w-full md:w-auto bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-white text-sm focus:ring-1 focus:ring-white/30 focus:outline-none appearance-none"
+            className="premium-input w-full md:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
           >
             <option value="all">All Statuses</option>
             <option value="Received">Received</option>
@@ -218,11 +224,11 @@ export default function Service({ isAdmin }) {
           </select>
         </div>
         <div className="relative">
-          <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
+          <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="w-full md:w-auto bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-8 py-2.5 text-white text-sm focus:ring-1 focus:ring-white/30 focus:outline-none appearance-none"
+            className="premium-input w-full md:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -230,37 +236,39 @@ export default function Service({ isAdmin }) {
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {loading ? (
-          <div className="p-8 text-center text-white/40">Loading...</div>
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
+            Loading...
+          </div>
         ) : displayedRecords.length === 0 ? (
-          <div className="p-8 text-center text-white/40">
+          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
             No service records found.
           </div>
         ) : (
           displayedRecords.map((svc) => (
             <div
               key={svc.id}
-              className="bg-zinc-900/50 border border-white/5 rounded-xl overflow-hidden"
+              className="glass-card rounded-2xl overflow-hidden"
             >
               <div
                 onClick={() =>
                   setExpandedId(expandedId === svc.id ? null : svc.id)
                 }
-                className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                className="flex items-center justify-between p-4 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
                 <div className="flex-1 flex items-center gap-4 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 flex-shrink-0">
-                    <Wrench className="w-5 h-5 text-white/40" />
+                  <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                    <Wrench className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white/90 font-medium truncate">
+                    <div className="text-zinc-900 dark:text-white font-bold truncate">
                       {svc.customer_name}{" "}
-                      <span className="text-white/40 font-normal text-xs">
+                      <span className="text-zinc-500 dark:text-zinc-500 font-normal text-xs">
                         ({svc.phone})
                       </span>
                     </div>
-                    <div className="text-white/40 text-xs font-mono truncate">
+                    <div className="text-zinc-500 dark:text-zinc-500 text-xs font-mono truncate">
                       {svc.battery_brand}{" "}
                       {svc.serial_number || svc.battery_model}
                     </div>
@@ -269,7 +277,7 @@ export default function Service({ isAdmin }) {
                     value={svc.status}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleStatusChange(svc.id, e.target.value)}
-                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer max-w-[110px] md:max-w-none truncate ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"}`}
+                    className={`text-xs font-medium px-3 py-1.5 rounded-lg border outline-none cursor-pointer max-w-[110px] md:max-w-none truncate ${statusColors[svc.status] || "bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20"}`}
                   >
                     <option>Received</option>
                     <option>Under Testing</option>
@@ -283,7 +291,7 @@ export default function Service({ isAdmin }) {
                   animate={{ rotate: expandedId === svc.id ? 180 : 0 }}
                   className="ml-4 flex-shrink-0"
                 >
-                  <ChevronDown className="w-5 h-5 text-white/30" />
+                  <ChevronDown className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
                 </motion.div>
               </div>
 
@@ -295,13 +303,13 @@ export default function Service({ isAdmin }) {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 border-t border-white/5 bg-black/20">
+                    <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
                       <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                         <div>
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Date & Time
                           </span>
-                          <span className="text-white/90">
+                          <span className="text-zinc-900 dark:text-white">
                             {svc.date_received
                               ? new Date(svc.date_received).toLocaleDateString()
                               : "-"}{" "}
@@ -309,33 +317,33 @@ export default function Service({ isAdmin }) {
                           </span>
                         </div>
                         <div>
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Serial Number
                           </span>
-                          <span className="text-white/90 font-mono">
+                          <span className="text-zinc-900 dark:text-white font-mono">
                             {svc.serial_number || "-"}
                           </span>
                         </div>
                         <div className="col-span-2">
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Issue
                           </span>
-                          <span className="text-white/90">
+                          <span className="text-zinc-900 dark:text-white">
                             {svc.issue || "-"}
                           </span>
                         </div>
                         <div className="col-span-2">
-                          <span className="text-white/40 uppercase text-xs block mb-1">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-1">
                             Address
                           </span>
-                          <span className="text-white/90">
+                          <span className="text-zinc-900 dark:text-white">
                             {svc.customer_address || "-"}{" "}
                             {svc.map_coordinates ? (
                               <a
                                 href={`https://maps.google.com/?q=${svc.map_coordinates}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-indigo-400 underline"
+                                className="text-indigo-500 dark:text-indigo-400 underline"
                               >
                                 (View Map)
                               </a>
@@ -348,7 +356,7 @@ export default function Service({ isAdmin }) {
 
                       {svc.image_urls?.length > 0 && (
                         <div className="mb-4">
-                          <span className="text-white/40 uppercase text-xs block mb-2">
+                          <span className="text-zinc-400 dark:text-zinc-500 uppercase text-xs block mb-2">
                             Attached Photos
                           </span>
                           <div className="flex flex-wrap gap-2">
@@ -362,7 +370,7 @@ export default function Service({ isAdmin }) {
                                 <img
                                   src={url}
                                   alt={`Upload ${idx}`}
-                                  className="w-16 h-16 object-cover rounded-lg border border-white/10 hover:opacity-80"
+                                  className="w-16 h-16 object-cover rounded-lg border border-zinc-200 dark:border-zinc-800 hover:opacity-80"
                                 />
                               </a>
                             ))}
@@ -371,8 +379,8 @@ export default function Service({ isAdmin }) {
                       )}
 
                       {deleteConfirmId === svc.id ? (
-                        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                          <p className="text-red-400 text-sm mb-2">
+                        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                          <p className="text-red-500 dark:text-red-400 text-sm mb-2 font-medium">
                             Type DELETE to confirm
                           </p>
                           <input
@@ -381,7 +389,7 @@ export default function Service({ isAdmin }) {
                             onChange={(e) =>
                               setDeleteText(e.target.value.toUpperCase())
                             }
-                            className="w-full bg-black/30 border border-red-500/30 rounded-lg px-3 py-2 text-white mb-2 outline-none"
+                            className="premium-input w-full rounded-lg px-3 py-2 mb-2 outline-none text-white"
                             placeholder="DELETE"
                           />
                           <div className="flex gap-2">
@@ -400,7 +408,7 @@ export default function Service({ isAdmin }) {
                                 setDeleteConfirmId(null);
                                 setDeleteText("");
                               }}
-                              className="px-4 bg-zinc-700 text-white py-2 rounded-lg text-sm"
+                              className="px-4 bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white py-2 rounded-lg text-sm"
                             >
                               Cancel
                             </button>
@@ -410,14 +418,14 @@ export default function Service({ isAdmin }) {
                         <div className="flex gap-2">
                           <button
                             onClick={() => openEditForm(svc)}
-                            className="flex-1 flex items-center justify-center gap-2 bg-white/10 text-white py-2 rounded-lg text-sm hover:bg-white/20 transition-colors"
+                            className="flex-1 flex items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white py-2 rounded-lg text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
                           >
                             <Pencil className="w-4 h-4" /> Edit
                           </button>
                           {isAdmin && (
                             <button
                               onClick={() => setDeleteConfirmId(svc.id)}
-                              className="px-4 flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-2 rounded-lg text-sm hover:bg-red-500/20 transition-colors"
+                              className="px-4 flex items-center justify-center gap-2 bg-red-500/10 text-red-500 dark:text-red-400 py-2 rounded-lg text-sm hover:bg-red-500/20 transition-colors"
                             >
                               <Trash2 className="w-4 h-4" /> Delete
                             </button>
@@ -446,16 +454,16 @@ export default function Service({ isAdmin }) {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+              className="glass-card rounded-3xl p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-semibold">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
                   {editingItem ? "Edit Service Ticket" : "New Service Ticket"}
                 </h3>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="text-white/40 hover:text-white"
+                  className="text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -463,7 +471,7 @@ export default function Service({ isAdmin }) {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Customer Name
                     </label>
                     <input
@@ -471,12 +479,12 @@ export default function Service({ isAdmin }) {
                       name="customer_name"
                       value={form.customer_name || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                       placeholder="John Doe"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Phone
                     </label>
                     <input
@@ -484,14 +492,14 @@ export default function Service({ isAdmin }) {
                       name="phone"
                       value={form.phone || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                       placeholder="9876543210"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                  <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                     Address & Location
                   </label>
                   <div className="flex gap-2">
@@ -499,13 +507,13 @@ export default function Service({ isAdmin }) {
                       name="customer_address"
                       value={form.customer_address || ""}
                       onChange={handleChange}
-                      className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input flex-1 rounded-xl px-4 py-3 outline-none transition-colors"
                       placeholder="Enter manually or use map"
                     />
                     <button
                       type="button"
                       onClick={() => setShowMap(true)}
-                      className="bg-white/10 hover:bg-white/20 text-white px-3 rounded-xl text-xs font-medium flex items-center gap-1 whitespace-nowrap"
+                      className="bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-4 rounded-xl text-xs font-bold flex items-center gap-1 whitespace-nowrap"
                     >
                       <MapPin className="w-4 h-4" /> Map
                     </button>
@@ -514,33 +522,33 @@ export default function Service({ isAdmin }) {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Battery Brand
                     </label>
                     <input
                       name="battery_brand"
                       value={form.battery_brand || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                       placeholder="Amaron"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Model / Serial No.
                     </label>
                     <input
                       name="serial_number"
                       value={form.serial_number || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none font-mono"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors font-mono"
                       placeholder="SN98765"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                  <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                     Issue / Service Needed
                   </label>
                   <textarea
@@ -548,14 +556,14 @@ export default function Service({ isAdmin }) {
                     value={form.issue || ""}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                    className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                     placeholder="Not charging, low backup, etc."
                   ></textarea>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Date
                     </label>
                     <input
@@ -563,11 +571,11 @@ export default function Service({ isAdmin }) {
                       name="date_received"
                       value={form.date_received || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Time
                     </label>
                     <input
@@ -575,18 +583,18 @@ export default function Service({ isAdmin }) {
                       name="received_time"
                       value={form.received_time || ""}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1 uppercase tracking-wider">
+                    <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Status
                     </label>
                     <select
                       name="status"
                       value={form.status || "Received"}
                       onChange={handleChange}
-                      className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-1 focus:ring-white/30 focus:outline-none"
+                      className="premium-input w-full rounded-xl px-4 py-3 outline-none transition-colors"
                     >
                       <option>Received</option>
                       <option>Under Testing</option>
@@ -598,8 +606,8 @@ export default function Service({ isAdmin }) {
                   </div>
                 </div>
 
-                <div className="border-t border-white/10 pt-4 mt-4">
-                  <label className="block text-xs text-white/50 mb-2 uppercase tracking-wider">
+                <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4 mt-4">
+                  <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                     Upload Photos (Max 4)
                   </label>
                   <div className="flex flex-wrap gap-3 mb-3">
@@ -608,7 +616,7 @@ export default function Service({ isAdmin }) {
                         <img
                           src={url}
                           alt={`Upload ${idx}`}
-                          className="w-full h-full object-cover rounded-lg border border-white/10"
+                          className="w-full h-full object-cover rounded-lg border border-zinc-200 dark:border-zinc-800"
                         />
                         <button
                           type="button"
@@ -620,7 +628,7 @@ export default function Service({ isAdmin }) {
                       </div>
                     ))}
                     {(form.image_urls?.length || 0) < 4 && (
-                      <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed border-white/10 rounded-lg cursor-pointer hover:border-white/30 transition-colors text-white/30 text-xs text-center px-2">
+                      <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors text-zinc-400 dark:text-zinc-500 text-xs text-center px-2 font-medium">
                         <input
                           type="file"
                           accept="image/*"
@@ -637,7 +645,7 @@ export default function Service({ isAdmin }) {
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-white text-black font-medium py-3 rounded-xl mt-4 hover:bg-white/90 transition-colors"
+                  className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl mt-6 hover:bg-indigo-500 transition-colors"
                 >
                   {editingItem ? "Update Ticket" : "Save Service Ticket"}
                 </motion.button>
