@@ -1,8 +1,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --canvas: #f4f4f5;
+    --card: #ffffff;
+    --card-border: #e4e4e7;
+    --card-shadow: 0 6px 24px -12px rgba(0, 0, 0, 0.1);
+    --accent-card: #0a0a0a;
+    --accent-border: #1c1c1f;
+    --text: #0a0a0a;
+    --text-muted: #71717a;
+    --input-bg: #f4f4f5;
+    --input-border: #e4e4e7;
+}
+
+.dark {
+    --canvas: #0e0e10;
+    --card: #18181b;
+    --card-border: #27272a;
+    --card-shadow: 0 12px 32px -14px rgba(0, 0, 0, 0.65);
+    --accent-card: #0a0a0a;
+    --accent-border: #2a2a2e;
+    --text: #ffffff;
+    --text-muted: #a1a1aa;
+    --input-bg: #101013;
+    --input-border: #2a2a2e;
+}
 
 * {
     -webkit-font-smoothing: antialiased;
@@ -12,14 +39,11 @@
 body {
     margin: 0;
     font-family: "Plus Jakarta Sans", sans-serif;
-    transition: background-color 0.3s ease;
-    background-color: #f4f4f5;
-    color: #0a0a0a;
-}
-
-.dark body {
-    background-color: #000000;
-    color: #ffffff;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+    background-color: var(--canvas);
+    color: var(--text);
 }
 
 ::-webkit-scrollbar {
@@ -34,37 +58,34 @@ body {
     border-radius: 10px;
 }
 .dark ::-webkit-scrollbar-thumb {
-    background: #1f1f1f;
+    background: #2a2a2e;
 }
 
 .glass-card {
-    background: #ffffff;
-    border: 1px solid #e4e4e7;
-    box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 0.05);
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
 }
 
-.dark .glass-card {
-    background: #0a0a0a;
-    border: 1px solid #1f1f1f;
-    box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 1);
+.accent-card {
+    background: var(--accent-card);
+    border: 1px solid var(--accent-border);
+    box-shadow:
+        var(--card-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    color: #ffffff;
 }
 
-/* Premium Input Style for consistency */
 .premium-input {
-    background: #f4f4f5;
-    border: 1px solid #e4e4e7;
-    color: #0a0a0a;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 .premium-input:focus {
     border-color: #6366f1;
-    background: #ffffff;
-}
-.dark .premium-input {
-    background: #18181b;
-    border: 1px solid #27272a;
-    color: #ffffff;
-}
-.dark .premium-input:focus {
-    border-color: #6366f1;
-    background: #0a0a0a;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    outline: none;
 }

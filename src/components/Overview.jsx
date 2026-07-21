@@ -52,14 +52,7 @@ export default function Overview() {
     setLoading(false);
   };
 
-  const cards = [
-    {
-      title: "Revenue This Month",
-      value: `₹${stats.revenue.toLocaleString()}`,
-      icon: IndianRupee,
-      color: "text-green-500",
-      bg: "bg-green-500/10",
-    },
+  const supporting = [
     {
       title: "Sales This Month",
       value: stats.salesCount,
@@ -68,11 +61,11 @@ export default function Overview() {
       bg: "bg-indigo-500/10",
     },
     {
-      title: "Active Service Tickets",
+      title: "Active Service",
       value: stats.activeService,
       icon: Wrench,
-      color: "text-yellow-500",
-      bg: "bg-yellow-500/10",
+      color: "text-amber-500",
+      bg: "bg-amber-500/10",
     },
     {
       title: "Ready for Delivery",
@@ -85,52 +78,85 @@ export default function Overview() {
 
   return (
     <div>
-      <div className="mb-12">
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
+      <div className="mb-8">
+        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-zinc-900 dark:text-white">
           Dashboard
         </h2>
-        <p className="text-base text-zinc-500 dark:text-zinc-500 font-medium">
+        <p className="text-sm md:text-base text-zinc-500 dark:text-zinc-400 font-medium mt-1">
           Overview of your shop's performance this month.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {loading ? (
-          <div className="col-span-4 p-8 text-center text-zinc-500 dark:text-zinc-400">
-            Loading stats...
-          </div>
-        ) : (
-          cards.map((card, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              className="glass-card p-6 rounded-3xl flex flex-col justify-between min-h-[160px]"
-            >
-              <div className="flex justify-between items-start mb-6">
-                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-bold">
-                  {card.title}
-                </span>
-                <div className={`p-2 rounded-xl ${card.bg}`}>
+      {loading ? (
+        <div className="p-10 text-center text-zinc-500 dark:text-zinc-400">
+          Loading stats...
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {/* Hero revenue — solid black accent card */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="accent-card rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[180px]"
+          >
+            <div className="flex justify-between items-start">
+              <span className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">
+                Revenue This Month
+              </span>
+              <div className="p-2.5 rounded-xl bg-amber-400/15">
+                <IndianRupee className="w-5 h-5 text-amber-400" />
+              </div>
+            </div>
+            <div className="text-5xl md:text-6xl font-extrabold tracking-tight text-white font-mono">
+              ₹{stats.revenue.toLocaleString()}
+            </div>
+          </motion.div>
+
+          {/* Supporting stats — compact floating cards */}
+          <div className="grid grid-cols-3 gap-3 md:gap-4">
+            {supporting.map((card, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.08 * (idx + 1) }}
+                className="glass-card rounded-2xl md:rounded-3xl p-4 md:p-5 flex flex-col justify-between min-h-[120px] md:min-h-[140px]"
+              >
+                <div
+                  className={`p-2 rounded-lg md:rounded-xl ${card.bg} w-fit`}
+                >
                   <card.icon className={`w-4 h-4 ${card.color}`} />
                 </div>
-              </div>
-              <div className="text-3xl md:text-4xl font-extrabold font-sans text-zinc-900 dark:text-white">
-                {card.value}
-              </div>
-            </motion.div>
-          ))
-        )}
-      </div>
+                <div>
+                  <div className="text-2xl md:text-3xl font-extrabold font-mono text-zinc-900 dark:text-white">
+                    {card.value}
+                  </div>
+                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-bold">
+                    {card.title}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
-      <div className="mt-8 glass-card text-sm p-6 rounded-3xl flex items-center gap-4 text-zinc-700 dark:text-zinc-300">
-        <CheckCircle2 className="w-6 h-6 text-teal-500 flex-shrink-0" />
-        <p>
-          All systems are running smoothly. Use the sidebar to add new sales,
-          service tickets, or manage inventory.
-        </p>
-      </div>
+          {/* Status — free-floating pill */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="inline-flex items-center gap-2.5 rounded-full bg-[var(--card)] border border-[var(--card-border)] px-4 py-2 w-fit"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+            </span>
+            <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+              All systems running smoothly
+            </span>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

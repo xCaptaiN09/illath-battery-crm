@@ -64,29 +64,35 @@ export default function Dashboard() {
   ];
   if (isAdmin) tabs.push({ id: "admin", name: "Admin", icon: Shield });
 
+  const themeChip = (
+    <button
+      onClick={toggleTheme}
+      className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--card)] border border-[var(--card-border)] shadow-sm text-zinc-900 dark:text-white transition-transform active:scale-95"
+    >
+      {theme === "dark" ? (
+        <Sun className="w-5 h-5 text-amber-400" />
+      ) : (
+        <Moon className="w-5 h-5" />
+      )}
+    </button>
+  );
+
   return (
-    <div className="min-h-screen p-4 flex flex-col md:flex-row gap-4 relative transition-colors bg-zinc-100 dark:bg-black">
-      {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-2 mb-2 sticky top-0 z-30 transition-colors bg-zinc-100 dark:bg-black">
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="p-2 glass-card rounded-xl text-zinc-900 dark:text-white"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-        <h1 className="text-sm font-bold tracking-tight text-zinc-900 dark:text-white uppercase truncate">
+    <div className="min-h-screen bg-[var(--canvas)] p-3 md:p-4 flex flex-col md:flex-row gap-3 md:gap-4 relative transition-colors">
+      {/* Mobile Top Bar — plain brand label + floating circular chips, no box */}
+      <div className="md:hidden flex items-center justify-between px-1 py-2 mb-1 sticky top-0 z-30 bg-[var(--canvas)]">
+        <h1 className="text-sm font-extrabold tracking-tight text-zinc-900 dark:text-white uppercase truncate pl-1">
           {shopName}
         </h1>
-        <button
-          onClick={toggleTheme}
-          className="p-2 glass-card rounded-xl text-zinc-900 dark:text-white"
-        >
-          {theme === "dark" ? (
-            <Sun className="w-5 h-5 text-yellow-400" />
-          ) : (
-            <Moon className="w-5 h-5" />
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          {themeChip}
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--card)] border border-[var(--card-border)] shadow-sm text-zinc-900 dark:text-white transition-transform active:scale-95"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -122,7 +128,7 @@ export default function Dashboard() {
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab.id)}
-              className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full text-sm font-semibold ${activeTab === tab.id ? "text-white dark:text-white bg-zinc-900 dark:bg-white/10" : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"}`}
+              className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full text-sm font-semibold ${activeTab === tab.id ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900" : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"}`}
             >
               <tab.icon className="w-5 h-5" />
               <span>{tab.name}</span>
@@ -139,20 +145,9 @@ export default function Dashboard() {
         </button>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 glass-card rounded-3xl p-6 md:p-10 overflow-y-auto">
-        <div className="hidden md:flex justify-end mb-4">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-xl bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white"
-          >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5 text-yellow-400" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
-          </button>
-        </div>
+      {/* Main Content Area — sits directly on the canvas, no wrapper card */}
+      <main className="flex-1 min-w-0 p-2 md:p-6">
+        <div className="hidden md:flex justify-end mb-4">{themeChip}</div>
 
         <AnimatePresence mode="wait">
           <motion.div
