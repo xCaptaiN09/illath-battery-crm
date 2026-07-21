@@ -81,7 +81,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[var(--canvas)] p-3 md:p-4 flex flex-col md:flex-row gap-3 md:gap-4 relative transition-colors">
       {/* Mobile Top Bar — plain brand label + floating circular chips, no box */}
       <div className="md:hidden flex items-center justify-between px-1 py-2 mb-1 sticky top-0 z-30 bg-[var(--canvas)]">
-        <h1 className="text-sm font-extrabold tracking-tight text-zinc-900 dark:text-white uppercase truncate pl-1">
+        <h1 className="text-sm font-extrabold tracking-tight text-zinc-900 dark:text-white truncate pl-1">
           {shopName}
         </h1>
         <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export default function Dashboard() {
         className={`glass-card p-6 flex flex-col gap-4 z-50 fixed top-0 left-0 h-full w-72 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:static md:translate-x-0 md:w-64 md:h-auto md:min-h-[calc(100vh-2rem)] md:z-0 rounded-3xl`}
       >
         <div className="flex justify-between items-center w-full mb-8">
-          <h1 className="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white uppercase truncate">
+          <h1 className="text-lg font-extrabold tracking-tight leading-tight text-zinc-900 dark:text-white">
             {shopName}
           </h1>
           <button

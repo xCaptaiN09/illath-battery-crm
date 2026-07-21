@@ -178,7 +178,7 @@ export default function Service({ isAdmin }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:justify-between sm:items-center">
         <div>
           <h2 className="text-4xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
             Service
@@ -190,14 +190,14 @@ export default function Service({ isAdmin }) {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={openNewForm}
-          className="flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-3 rounded-xl text-sm font-bold hover:opacity-80 transition-opacity"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-3 rounded-xl text-sm font-bold hover:opacity-80 transition-opacity"
         >
           <Plus className="w-4 h-4" /> New Service
         </motion.button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-3 mb-6">
+        <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
@@ -207,32 +207,34 @@ export default function Service({ isAdmin }) {
             className="premium-input w-full rounded-xl pl-11 pr-4 py-3 outline-none transition-colors text-sm"
           />
         </div>
-        <div className="relative">
-          <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="premium-input w-full md:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
-          >
-            <option value="all">All Statuses</option>
-            <option value="Received">Received</option>
-            <option value="Under Testing">Under Testing</option>
-            <option value="Charging">Charging</option>
-            <option value="Ready for Delivery">Ready for Delivery</option>
-            <option value="Handed Over">Handed Over</option>
-            <option value="Unrepairable">Unrepairable</option>
-          </select>
-        </div>
-        <div className="relative">
-          <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="premium-input w-full md:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
-          >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-          </select>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="relative">
+            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="premium-input w-full rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
+            >
+              <option value="all">All Statuses</option>
+              <option value="Received">Received</option>
+              <option value="Under Testing">Under Testing</option>
+              <option value="Charging">Charging</option>
+              <option value="Ready for Delivery">Ready for Delivery</option>
+              <option value="Handed Over">Handed Over</option>
+              <option value="Unrepairable">Unrepairable</option>
+            </select>
+          </div>
+          <div className="relative">
+            <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="premium-input w-full rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -242,8 +244,22 @@ export default function Service({ isAdmin }) {
             Loading...
           </div>
         ) : displayedRecords.length === 0 ? (
-          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
-            No service records found.
+          <div className="glass-card rounded-3xl p-10 md:p-14 flex flex-col items-center justify-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+              <Wrench className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
+            </div>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
+              No service tickets yet
+            </h3>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mb-5">
+              Log a battery brought in for repair and it will show up here.
+            </p>
+            <button
+              onClick={openNewForm}
+              className="flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-2.5 rounded-xl text-sm font-bold"
+            >
+              <Plus className="w-4 h-4" /> New Service
+            </button>
           </div>
         ) : (
           displayedRecords.map((svc) => (
@@ -389,7 +405,7 @@ export default function Service({ isAdmin }) {
                             onChange={(e) =>
                               setDeleteText(e.target.value.toUpperCase())
                             }
-                            className="premium-input w-full rounded-lg px-3 py-2 mb-2 outline-none text-white"
+                            className="premium-input w-full rounded-lg px-3 py-2 mb-2 outline-none"
                             placeholder="DELETE"
                           />
                           <div className="flex gap-2">
@@ -454,10 +470,10 @@ export default function Service({ isAdmin }) {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="glass-card rounded-3xl p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+              className="glass-card rounded-3xl p-5 sm:p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-8">
+              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
                   {editingItem ? "Edit Service Ticket" : "New Service Ticket"}
                 </h3>
@@ -469,7 +485,7 @@ export default function Service({ isAdmin }) {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Customer Name
@@ -520,7 +536,7 @@ export default function Service({ isAdmin }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Battery Brand
@@ -561,7 +577,7 @@ export default function Service({ isAdmin }) {
                   ></textarea>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Date

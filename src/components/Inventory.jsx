@@ -121,7 +121,7 @@ export default function Inventory({ isAdmin }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:justify-between sm:items-center">
         <div>
           <h2 className="text-4xl font-extrabold tracking-tighter mb-2 text-zinc-900 dark:text-white">
             Inventory
@@ -133,13 +133,13 @@ export default function Inventory({ isAdmin }) {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={openNewForm}
-          className="flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-3 rounded-xl text-sm font-bold hover:opacity-80 transition-opacity"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-3 rounded-xl text-sm font-bold hover:opacity-80 transition-opacity"
         >
           <Plus className="w-4 h-4" /> Add Battery
         </motion.button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 mb-6">
+      <div className="flex flex-col gap-3 sm:flex-row mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
@@ -150,12 +150,12 @@ export default function Inventory({ isAdmin }) {
             className="premium-input w-full rounded-xl pl-11 pr-4 py-3 outline-none transition-colors text-sm"
           />
         </div>
-        <div className="relative">
+        <div className="relative sm:w-auto">
           <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="premium-input w-full md:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
+            className="premium-input w-full sm:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -171,8 +171,22 @@ export default function Inventory({ isAdmin }) {
             Loading...
           </div>
         ) : displayedItems.length === 0 ? (
-          <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
-            No batteries found.
+          <div className="glass-card rounded-3xl p-10 md:p-14 flex flex-col items-center justify-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+              <Package className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
+            </div>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
+              No batteries in stock
+            </h3>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mb-5">
+              Add your first battery to start tracking stock and pricing.
+            </p>
+            <button
+              onClick={openNewForm}
+              className="flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-2.5 rounded-xl text-sm font-bold"
+            >
+              <Plus className="w-4 h-4" /> Add Battery
+            </button>
           </div>
         ) : (
           displayedItems.map((item) => (
@@ -269,7 +283,7 @@ export default function Inventory({ isAdmin }) {
                             onChange={(e) =>
                               setDeleteText(e.target.value.toUpperCase())
                             }
-                            className="premium-input w-full rounded-lg px-3 py-2 mb-2 outline-none text-white"
+                            className="premium-input w-full rounded-lg px-3 py-2 mb-2 outline-none"
                             placeholder="DELETE"
                           />
                           <div className="flex gap-2">
@@ -334,10 +348,10 @@ export default function Inventory({ isAdmin }) {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="glass-card rounded-3xl p-8 w-full max-w-md shadow-2xl"
+              className="glass-card rounded-3xl p-5 sm:p-8 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-8">
+              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
                   {editingItem ? "Edit Battery" : "Add New Battery"}
                 </h3>
@@ -375,7 +389,7 @@ export default function Inventory({ isAdmin }) {
                     placeholder="e.g. DIN55"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-wider font-bold">
                       Type

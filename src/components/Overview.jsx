@@ -101,14 +101,14 @@ export default function Overview() {
             className="accent-card rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[180px]"
           >
             <div className="flex justify-between items-start">
-              <span className="text-[11px] text-zinc-400 uppercase tracking-widest font-bold">
+              <span className="text-[11px] text-zinc-400 dark:text-zinc-500 uppercase tracking-widest font-bold">
                 Revenue This Month
               </span>
-              <div className="p-2.5 rounded-xl bg-amber-400/15">
-                <IndianRupee className="w-5 h-5 text-amber-400" />
+              <div className="p-2.5 rounded-xl bg-amber-400/15 dark:bg-amber-500/10">
+                <IndianRupee className="w-5 h-5 text-amber-400 dark:text-amber-600" />
               </div>
             </div>
-            <div className="text-5xl md:text-6xl font-extrabold tracking-tight text-white font-mono">
+            <div className="text-5xl md:text-6xl font-extrabold tracking-tight text-white dark:text-zinc-900 font-mono">
               ₹{stats.revenue.toLocaleString()}
             </div>
           </motion.div>
