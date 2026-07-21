@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { Battery, UserPlus, LogIn, Sun, Moon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
-// Login can't read the shop name from the DB (RLS blocks it until signed in),
-// so set the brand shown on this screen here. The first word becomes the watermark.
-const BRAND_NAME = "Illath Battery House";
+// Fallback shown only if the live name can't be fetched (e.g. offline).
+const FALLBACK_NAME = "Battery CRM";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,9 +14,19 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [mode, setMode] = useState("login");
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [brandName, setBrandName] = useState(FALLBACK_NAME);
   const { theme, toggleTheme } = useTheme();
 
-  const brandMark = BRAND_NAME.trim().split(/\s+/)[0] || "CRM";
+  useEffect(() => {
+    supabase
+      .rpc("get_public_shop_name")
+      .then(({ data }) => {
+        if (data) setBrandName(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const brandMark = brandName.trim().split(/\s+/)[0] || "CRM";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,7 +85,7 @@ export default function Login() {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 text-zinc-900 dark:text-white">
-          {BRAND_NAME}
+          {brandName}
         </h1>
         <p className="text-base md:text-lg text-zinc-500 dark:text-zinc-400 mb-10 font-light">
           {mode === "login"
