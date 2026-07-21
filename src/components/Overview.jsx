@@ -82,7 +82,7 @@ export default function Overview({ shopName = "" }) {
     <div className="relative overflow-x-clip">
       <span
         aria-hidden="true"
-        className="brand-mark pointer-events-none select-none absolute top-0 right-0 z-0 -translate-y-2 translate-x-[12%] whitespace-nowrap text-[26vw] md:text-[16vw] xl:text-[12rem] text-zinc-900/[0.045] dark:text-white/[0.05]"
+        className="brand-mark pointer-events-none select-none absolute top-0 right-0 z-0 -translate-y-2 translate-x-[12%] md:translate-x-0 whitespace-nowrap text-[26vw] md:text-[15vw] xl:text-[12rem] text-zinc-900/[0.045] dark:text-white/[0.05]"
       >
         {brandMark}
       </span>
