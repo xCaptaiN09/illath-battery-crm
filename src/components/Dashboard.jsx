@@ -8,7 +8,6 @@ import {
   Package,
   Shield,
   Home,
-  Menu,
   X,
   Sun,
   Moon,
@@ -87,10 +86,11 @@ export default function Dashboard() {
         <div className="flex items-center gap-2">
           {themeChip}
           <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--card)] border border-[var(--card-border)] shadow-sm text-zinc-900 dark:text-white transition-transform active:scale-95"
+            onClick={handleLogout}
+            aria-label="Logout"
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--card)] border border-[var(--card-border)] shadow-sm text-zinc-500 dark:text-zinc-400 transition-transform active:scale-95"
           >
-            <Menu className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -146,7 +146,7 @@ export default function Dashboard() {
       </aside>
 
       {/* Main Content Area — sits directly on the canvas, no wrapper card */}
-      <main className="flex-1 min-w-0 p-2 md:p-6">
+      <main className="flex-1 min-w-0 p-2 pb-28 md:p-6">
         <div className="hidden md:flex justify-end mb-4">{themeChip}</div>
 
         <AnimatePresence mode="wait">
@@ -165,6 +165,21 @@ export default function Dashboard() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Mobile floating pill nav */}
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 md:hidden">
+        <div className="flex items-center gap-1 rounded-full bg-[var(--card)] border border-[var(--card-border)] shadow-lg px-2 py-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center justify-center w-12 h-12 rounded-full transition-colors ${activeTab === tab.id ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900" : "text-zinc-500 dark:text-zinc-400"}`}
+            >
+              <tab.icon className="w-5 h-5" />
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

@@ -196,8 +196,8 @@ export default function Service({ isAdmin }) {
         </motion.button>
       </div>
 
-      <div className="flex flex-col gap-3 mb-6">
-        <div className="relative">
+      <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
@@ -207,13 +207,13 @@ export default function Service({ isAdmin }) {
             className="premium-input w-full rounded-xl pl-11 pr-4 py-3 outline-none transition-colors text-sm"
           />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:contents">
           <div className="relative">
             <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="premium-input w-full rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
+              className="premium-input w-full sm:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
             >
               <option value="all">All Statuses</option>
               <option value="Received">Received</option>
@@ -229,7 +229,7 @@ export default function Service({ isAdmin }) {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="premium-input w-full rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
+              className="premium-input w-full sm:w-auto rounded-xl pl-11 pr-8 py-3 outline-none transition-colors text-sm appearance-none cursor-pointer"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -244,8 +244,8 @@ export default function Service({ isAdmin }) {
             Loading...
           </div>
         ) : displayedRecords.length === 0 ? (
-          <div className="glass-card rounded-3xl p-10 md:p-14 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+          <div className="glass-card rounded-3xl p-10 md:p-14 mx-auto w-full max-w-xl flex flex-col items-center justify-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-700/60 flex items-center justify-center mb-4">
               <Wrench className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
             </div>
             <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">

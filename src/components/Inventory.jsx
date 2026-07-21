@@ -171,8 +171,8 @@ export default function Inventory({ isAdmin }) {
             Loading...
           </div>
         ) : displayedItems.length === 0 ? (
-          <div className="glass-card rounded-3xl p-10 md:p-14 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+          <div className="glass-card rounded-3xl p-10 md:p-14 mx-auto w-full max-w-xl flex flex-col items-center justify-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-700/60 flex items-center justify-center mb-4">
               <Package className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
             </div>
             <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
