@@ -82,14 +82,14 @@ export default function Overview({ shopName = "" }) {
     <div className="relative overflow-x-clip">
       <span
         aria-hidden="true"
-        className="brand-mark pointer-events-none select-none absolute top-0 right-0 z-0 -translate-y-2 translate-x-[12%] md:translate-x-0 whitespace-nowrap text-[26vw] md:text-[15vw] xl:text-[12rem] text-zinc-900/[0.045] dark:text-white/[0.05]"
+        className="brand-mark pointer-events-none select-none absolute top-0 right-0 z-0 -translate-y-2 translate-x-[12%] md:top-8 md:right-2 md:translate-y-0 md:translate-x-0 md:translate-x-0 whitespace-nowrap text-[26vw] md:text-[15vw] xl:text-[15rem] text-zinc-900/[0.045] md:text-zinc-900/[0.06] dark:text-white/[0.05] md:dark:text-white/[0.07]"
       >
         {brandMark}
       </span>
 
       <div className="relative z-10">
-        <div className="mb-8">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-zinc-900 dark:text-white">
+        <div className="mb-8 md:mb-14">
+          <h2 className="text-4xl md:text-6xl xl:text-7xl font-extrabold tracking-tighter text-zinc-900 dark:text-white">
             Dashboard
           </h2>
           <p className="text-sm md:text-base text-zinc-500 dark:text-zinc-400 font-medium mt-1">
