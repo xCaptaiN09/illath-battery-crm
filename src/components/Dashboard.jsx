@@ -157,7 +157,7 @@ export default function Dashboard() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            {activeTab === "home" && <Overview />}
+            {activeTab === "home" && <Overview shopName={shopName} />}
             {activeTab === "sales" && <Sales isAdmin={isAdmin} />}
             {activeTab === "service" && <Service isAdmin={isAdmin} />}
             {activeTab === "inventory" && <Inventory isAdmin={isAdmin} />}
