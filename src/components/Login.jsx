@@ -4,6 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Battery, UserPlus, LogIn, Sun, Moon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
+// Login can't read the shop name from the DB (RLS blocks it until signed in),
+// so set the brand shown on this screen here. The first word becomes the watermark.
+const BRAND_NAME = "Illath Battery House";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +16,8 @@ export default function Login() {
   const [mode, setMode] = useState("login");
   const [signupSuccess, setSignupSuccess] = useState(false);
   const { theme, toggleTheme } = useTheme();
+
+  const brandMark = BRAND_NAME.trim().split(/\s+/)[0] || "CRM";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,16 +43,25 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors bg-gray-50 dark:bg-black">
-      {/* Theme Toggle */}
+    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center p-6 transition-colors bg-[var(--canvas)]">
+      {/* Faint brand-script watermark, centered behind everything */}
+      <span
+        aria-hidden="true"
+        className="brand-mark pointer-events-none select-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 whitespace-nowrap text-[34vw] md:text-[18rem] xl:text-[22rem] text-zinc-900/[0.04] dark:text-white/[0.05]"
+      >
+        {brandMark}
+      </span>
+
+      {/* Theme toggle — same floating circular chip as the dashboard */}
       <button
         onClick={toggleTheme}
-        className="absolute top-6 right-6 p-3 rounded-full bg-white dark:bg-zinc-800/50 backdrop-blur-md border border-black/5 dark:border-white/10"
+        aria-label="Toggle theme"
+        className="absolute top-5 right-5 z-20 w-10 h-10 rounded-full flex items-center justify-center bg-[var(--card)] border border-[var(--card-border)] shadow-sm text-zinc-900 dark:text-white transition-transform active:scale-95"
       >
         {theme === "dark" ? (
-          <Sun className="w-5 h-5 text-yellow-400" />
+          <Sun className="w-5 h-5 text-amber-400" />
         ) : (
-          <Moon className="w-5 h-5 text-zinc-900" />
+          <Moon className="w-5 h-5" />
         )}
       </button>
 
@@ -54,45 +69,53 @@ export default function Login() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md flex flex-col items-center text-center"
+        className="relative z-10 w-full max-w-md flex flex-col items-center text-center"
       >
-        <div className="p-4 bg-indigo-500/10 rounded-3xl mb-6 border border-indigo-500/20">
-          <Battery className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+        <div className="p-4 rounded-2xl mb-6 bg-zinc-900 dark:bg-white shadow-sm">
+          <Battery className="w-8 h-8 text-white dark:text-zinc-900" />
         </div>
 
-        <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-zinc-900 dark:text-white">
-          Illath Battery House
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 text-zinc-900 dark:text-white">
+          {BRAND_NAME}
         </h1>
-        <p className="text-lg text-zinc-500 dark:text-zinc-400 mb-10 font-light">
+        <p className="text-base md:text-lg text-zinc-500 dark:text-zinc-400 mb-10 font-light">
           {mode === "login"
             ? "Welcome back. Sign in to manage your shop."
             : "Create a worker account to get started."}
         </p>
 
-        <form onSubmit={handleSubmit} className="w-full space-y-4 text-left">
+        <form onSubmit={handleSubmit} className="w-full space-y-5 text-left">
           <div>
-            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-widest font-medium">
+            <label
+              htmlFor="email"
+              className="block text-xs text-zinc-400 dark:text-zinc-500 mb-2 uppercase tracking-widest font-bold"
+            >
               Email Address
             </label>
             <input
+              id="email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-zinc-300 dark:border-zinc-700 px-1 py-3 text-lg text-zinc-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full bg-transparent border-b-2 border-zinc-200 dark:border-zinc-800 px-1 py-3 text-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:border-zinc-900 dark:focus:border-white focus:outline-none transition-colors"
               placeholder="you@example.com"
             />
           </div>
-          <div className="pt-2">
-            <label className="block text-xs text-zinc-500 mb-2 uppercase tracking-widest font-medium">
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-xs text-zinc-400 dark:text-zinc-500 mb-2 uppercase tracking-widest font-bold"
+            >
               Password
             </label>
             <input
+              id="password"
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-transparent border-b-2 border-zinc-300 dark:border-zinc-700 px-1 py-3 text-lg text-zinc-900 dark:text-white focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full bg-transparent border-b-2 border-zinc-200 dark:border-zinc-800 px-1 py-3 text-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:border-zinc-900 dark:focus:border-white focus:outline-none transition-colors"
               placeholder="••••••••"
             />
           </div>
@@ -103,7 +126,7 @@ export default function Login() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-red-500 dark:text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20 mt-4"
+                className="text-red-500 dark:text-red-400 text-sm bg-red-500/10 p-3 rounded-xl border border-red-500/20"
               >
                 {error}
               </motion.p>
@@ -113,7 +136,7 @@ export default function Login() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-green-500 dark:text-green-400 text-sm bg-green-500/10 p-3 rounded-lg border border-green-500/20 mt-4"
+                className="text-green-600 dark:text-green-400 text-sm bg-green-500/10 p-3 rounded-xl border border-green-500/20"
               >
                 Account created! Please ask the Admin to approve you, then sign
                 in.
@@ -125,7 +148,7 @@ export default function Login() {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white font-semibold py-4 rounded-full mt-8 hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2 text-lg shadow-[0_0_30px_-5px_rgba(99,102,241,0.5)]"
+            className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold py-4 rounded-xl mt-2 hover:opacity-90 transition-opacity flex items-center justify-center gap-2 text-base disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? (
               "Please wait..."
@@ -148,7 +171,7 @@ export default function Login() {
               setError(null);
               setSignupSuccess(false);
             }}
-            className="text-sm text-zinc-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors font-medium"
+            className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors font-medium"
           >
             {mode === "login"
               ? "Need an account? Sign Up"
